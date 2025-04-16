@@ -12,17 +12,6 @@
 extern char **environ;
 
 /**
- * struct command - Represents a shell command and its arguments
- * @args: Array of arguments for the command
- * @arg_count: Number of arguments in the command
- */
-typedef struct command
-{
-	char **args;       /* Arguments de la commande */
-	int arg_count;     /* Nombre d'arguments */
-} command_t;
-
-/**
  * struct path_node - Represents a node in a linked list of directories
  * @directory: The directory path
  * @next: Pointer to the next node in the list
@@ -48,14 +37,7 @@ void free_path_list(path_node_t *head);
 void print_path_list(const path_node_t *head);
 
 /* Fonctions principales du shell */
-int main(void);
 void shell_loop(void);
-
-/* Gestion des processus */
-pid_t fork(void);
-int execve(const char *filename, char *const argv[], char *const envp[]);
-pid_t wait(int *status);
-pid_t waitpid(pid_t pid, int *status, int options);
 
 /* Parsing et traitement des arguments */
 char *read_line(void);
@@ -64,9 +46,5 @@ void remove_comments(char *line);
 
 /* Utilitaires pour les fichiers */
 int _which(char *filename);
-
-/* Fonctions standard réimplémentées */
-char *strdup(const char *s);
-char *strtok(char *str, const char *delim);
 
 #endif
