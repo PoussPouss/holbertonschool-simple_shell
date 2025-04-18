@@ -42,10 +42,6 @@ char *read_line(void);
 char **split_string(char *str);
 void remove_comments(char *line);
 
-int _strlen(char *s);
-int _strncmp(const char *s1, const char *s2, size_t n);
-char *_strdup(char *str);
-char *_strchr(char *s, char c);
 
 /* Utilitaires pour les fichiers */
 int _which(char *filename);
