@@ -24,7 +24,7 @@ typedef struct path_node
 
 /* Gestion des variables d'environnement */
 char *_getenv(const char *name);
-int _find_env_index(const char *name);
+int find_env_index(const char *name);
 int _setenv(const char *name, const char *value, int overwrite);
 int _unsetenv(const char *name);
 void print_env(void);
@@ -41,8 +41,11 @@ void shell_loop(void);
 char *read_line(void);
 char **split_string(char *str);
 void remove_comments(char *line);
+
 int _strlen(char *s);
-char *_strncpy(char *dest, char *src, int n);
+int _strncmp(const char *s1, const char *s2, size_t n);
+char *_strdup(char *str);
+char *_strchr(char *s, char c);
 
 /* Utilitaires pour les fichiers */
 int _which(char *filename);
