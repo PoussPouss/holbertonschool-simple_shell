@@ -7,7 +7,7 @@
  * Return: 0 if strings are equal, negative if s1 < s2, positive if s1 > s2
  */
 int _strncmp(const char *s1, const char *s2, size_t n)
- {
+{
 	 size_t i;
 	 /* Protection contre les pointeurs NULL */
 	if (s1 == NULL && s2 == NULL)
@@ -25,7 +25,8 @@ int _strncmp(const char *s1, const char *s2, size_t n)
 		 /* Si on atteint la fin d'une des chaînes */
 		if (s1[i] == '\0')
 			return (0);  /* Les deux sont égales jusqu'ici */
-	 }
+	}
+
 	 /* Si on a comparé exactement n caractères */
 	return (0);
 }
@@ -78,5 +79,44 @@ int length = 0;
 return (length);
 
 }
+
+#include "main.h"
+#include <stdlib.h>
+/**
+* _strdup - Creates an array of chars and initializes it with a char
+* @str: The size of the array
+* Return: Pointer to the array, or NULL if it fails
+*/
+
+char *_strdup(char *str)
+{
+	char *dup_str;
+
+	int i;
+	int length = 0;
+
+	if (str == NULL)
+	return (NULL);
+
+	while (str[length] != '\0')
+	length++;
+
+	dup_str = malloc((length + 1) * sizeof(char));
+
+	if (dup_str == NULL)
+	return (NULL);
+
+	for (i = 0; i < length; i++)
+	{
+		dup_str[i] = str[i];
+	}
+
+	dup_str[i] = '\0';
+
+	return (dup_str);
+
+}
+
+
 
 
