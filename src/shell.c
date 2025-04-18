@@ -63,6 +63,6 @@ int main(void)
 		}
 	}
 
-	free(buffer);
+	free(buffers);
 	return (0);
 }
