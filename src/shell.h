@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <stddef.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
@@ -42,7 +43,6 @@ void shell_loop(void);
 char *read_line(void);
 char **split_string(char *str);
 void remove_comments(char *line);
-
 
 /* Utilitaires pour les fichiers */
 int _which(char *filename);
