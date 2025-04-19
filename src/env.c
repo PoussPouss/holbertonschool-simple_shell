@@ -86,8 +86,9 @@ int _setenv(const char *name, const char *value, int overwrite)
 		environ[index] = new_entry;
 		return (0);
 	}
-	for (env_count = 0; environ[env_count] != NULL; env_count++)
-		;
+	env_count = 0;
+	while (environ[env_count] != NULL)
+		env_count++;
 
 	 new_environ = malloc((env_count + 2) * sizeof(char *));
 	if (new_environ == NULL)
@@ -95,7 +96,6 @@ int _setenv(const char *name, const char *value, int overwrite)
 		free(new_entry);
 		return (-1);
 	}
-
 	for (i = 0; i < env_count; i++)
 		new_environ[i] = environ[i];
 
