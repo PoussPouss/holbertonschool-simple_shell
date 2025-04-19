@@ -33,8 +33,10 @@ void print_env(void);
 
 /* Manipulation des chemins PATH */
 path_node_t *build_path_list(void);
-void print_path_list(const path_node_t *head);
+int print_path_list(const path_node_t *head);
 int print_path_directories(void);
+char *find_path_command(char *command);
+void free_path_list(path_node_t *head);
 
 /* Fonctions principales du shell */
 void shell_loop(void);
@@ -46,6 +48,5 @@ void remove_comments(char *line);
 
 /* Utilitaires pour les fichiers */
 int _which(char *filename);
-
 
 #endif

@@ -1,3 +1,7 @@
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
 #include "shell.h"
 
 /**
@@ -15,11 +19,11 @@ path_node_t *build_path_list(void)
 	if (path_value == NULL)
 		return (NULL);
 
-	path_copy = _strdup(path_value);
+	path_copy = strdup(path_value);
 	if (path_copy == NULL)
 		return (NULL);
 
-	token = strtok(path_copy, ':');
+	token = strtok(path_copy, ":");
 
 	while (token != NULL)
 	{
@@ -39,7 +43,7 @@ path_node_t *build_path_list(void)
 		}
 		new_node->next = head;
 		head = new_node;
-		token = strtok(NULL, ':');
+		token = strtok(NULL, ":");
 	}
 	free(path_copy);
 	return (head);
@@ -51,26 +55,28 @@ path_node_t *build_path_list(void)
  *
  * Description: Iterates through the linked list of directories and prints
  * each directory to the standard output.
+ *
+ * Return: 0 on success, or 1 if an error occurs.
  */
-void print_path_list(const path_node_t *head)
+int print_path_list(const path_node_t *head)
 {
-char *path, *path_copy, *dir;
+	const path_node_t *current;
 
-	/* Récupérer la variable d'environnement PATH */
-	path = _getenv("PATH");
-	if (path == NULL)
+	if (head == NULL)
 	{
-		fprintf(stderr, "PATH variable not found\n");
+		fprintf(stderr, "Path list is empty\n");
 		return (1);
 	}
 
-	/* Dupliquer la chaîne PATH pour la manipulation avec strtok */
-	path_copy = _strdup(path);
-	if (path_copy == NULL)
+	/* Parcourir la liste chainée et afficher chaque répertoire */
+	current = head;
+	while (current != NULL)
 	{
-		fprintf(stderr, "Memory allocation error\n");
-		return (1);
+		printf("%s\n", current->directory);
+		current = current->next;
 	}
+
+	return (0);
 }
 
 /**
@@ -83,23 +89,24 @@ int print_path_directories(void)
 {
 	char *path_value, *token, *path_copy;
 	path_node_t *head = NULL, *new_node;
+	int result;
 
 	path_value = _getenv("PATH");
 	if (path_value == NULL)
-		return (NULL);
+		return (-1);
 
-	path_copy = _strdup(path_value);
+	path_copy = strdup(path_value);
 	if (path_copy == NULL)
-		return (NULL);
+		return (-1);
 
-	token = strtok(path_copy, ':');
+	token = strtok(path_copy, ":");
 	while (token != NULL)
 	{
 		new_node = malloc(sizeof(path_node_t));
 		if (new_node == NULL)
 		{
 			free(path_copy);
-			return (NULL);
+			return (-1);
 		}
 
 		new_node->directory = strdup(token);
@@ -107,12 +114,86 @@ int print_path_directories(void)
 		{
 			free(new_node);
 			free(path_copy);
-			return (NULL);
+			return (-1);
 		}
 		new_node->next = head;
 		head = new_node;
-		token = strtok(NULL, ':');
+		token = strtok(NULL, ":");
 	}
 	free(path_copy);
-	return (head);
+
+	result = print_path_list(head);
+
+	free_path_list(head);
+
+	return (result);
+}
+
+/**
+ * find_path_command - Searches for a command in the PATH directories
+ * @command: The command to find
+ *
+ * Description: This function searches for the given command in the directories
+ * listed in the PATH environment variable. If the command is found and is
+ * executable, it returns the full path to the command. If the command is not
+ * found, it returns NULL.
+ *
+ * Return: Full path if found, NULL otherwise
+ */
+char *find_path_command(char *command)
+{
+	path_node_t *path_list, *current;
+	char *full_path;
+	struct stat st;
+
+	if (strchr(command, '/') != NULL)
+	{
+		if (stat(command, &st) == 0 && (st.st_mode & S_IXUSR))
+			return (strdup(command));
+		return (NULL);
+	}
+
+	path_list = build_path_list();
+	if (!path_list)
+		return (NULL);
+
+	current = path_list;
+	while (current)
+	{
+		full_path = malloc(strlen(current->directory) + strlen(command) + 2);
+		if (!full_path)
+			return (NULL);
+
+		sprintf(full_path, "%s/%s", current->directory, command);
+
+		if (stat(full_path, &st) == 0 && (st.st_mode & S_IXUSR))
+		{
+			return (full_path);
+		}
+
+		free(full_path);
+		current = current->next;
+	}
+	return (NULL);
+}
+
+/**
+ * free_path_list - Frees a linked list of path directories
+ * @head: Pointer to the head of the linked list
+ *
+ * Description: This function iterates through the linked list and frees
+ * both the directory string and the node structure for each element.
+ */
+void free_path_list(path_node_t *head)
+{
+	path_node_t *current, *next_node;
+
+	current = head;
+	while (current != NULL)
+	{
+		next_node = current->next;
+		free(current->directory);
+		free(current);
+		current = next_node;
+	}
 }

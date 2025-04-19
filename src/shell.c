@@ -22,8 +22,9 @@ int main(void)
 	size_t bufsize = 0;
 	ssize_t characters;
 	pid_t child_pid;
-	int status;
-	char *argv[2];
+	int status, i;
+	char **args;
+	char *command_path;
 
 	while (1)
 	{
@@ -32,38 +33,67 @@ int main(void)
 
 		characters = getline(&buffer, &bufsize, stdin);
 
-	if (characters == -1)
-	{
-		if (isatty(STDIN_FILENO))
-			printf("\n");
-		break;
-	}
+		if (characters == -1)
+		{
+			if (isatty(STDIN_FILENO))
+				printf("\n");
+			break;
+		}
+
 		if (buffer[characters - 1] == '\n')
 			buffer[characters - 1] = '\0';
 
 		if (strlen(buffer) == 0)
 			continue;
 
-		argv[0] = buffer;
-		argv[1] = NULL;
-
-		child_pid = fork();
-
-		if (child_pid == -1)
+		args = split_string(buffer);
+		if (args == NULL || args[0] == NULL)
 		{
-			perror("Error:");
+			if (args)
+				free(args);
+			fprintf(stderr, "Memory allocation error\n");
 			continue;
 		}
+		command_path = find_path_command(args[0]);
+        if (command_path == NULL)
+        {
+            fprintf(stderr, "./hsh: %s: command not found\n", args[0]);
+            for (i = 0; args[i]; i++)
+                free(args[i]);
+            free(args);
+            continue;
+        }
+
+		child_pid = fork();
+        if (child_pid == -1)
+        {
+            perror("Error:");
+            free(command_path);
+            for (i = 0; args[i]; i++)
+                free(args[i]);
+            free(args);
+            continue;
+        }
 		if (child_pid == 0)
 		{
-			if (execve(argv[0], argv, environ) == -1)
+			if (execve(command_path, args, environ) == -1)
 			{
-				fprintf(stderr, "./hsh: No such file or directory\n");
+				fprintf(stderr, "./hsh: %s: No such file or directory\n", args[0]);
+				free(command_path);
+				for (i = 0; args[i]; i++)
+					free(args[i]);
+				free(args);
 				exit(1);
 			}
 		}
 		else
+		{
 			wait(&status);
+			free(command_path);
+			for (i = 0; args[i]; i++)
+				free(args[i]);
+			free(args);
+		}
 	}
 	free(buffer);
 	return (0);

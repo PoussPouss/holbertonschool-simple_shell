@@ -1,11 +1,6 @@
 #include <stddef.h>
-
-/**
- * 
- * 
- */
-char *read_line(void)
-{}
+#include <stdlib.h>
+#include <string.h>
 
 /**
  * split_string - Splits a string into an array of words.
@@ -25,7 +20,6 @@ char **split_string(char *str)
 	if (str == NULL)
 		return (NULL);
 
-	/* Première passe : compter les mots */
 	tmp = strdup(str);
 	token = strtok(tmp, " \t\n");
 
@@ -35,25 +29,17 @@ char **split_string(char *str)
 		token = strtok(NULL, " \t\n");
 	}
 	free(tmp);
-	/* Allouer l'array */
 	array = malloc(sizeof(char *) * (words + 1));
 
 	if (array == NULL)
 		return (NULL);
-	/* Deuxième passe : remplir l'array */
+
 	token = strtok(str, " \t\n");
 	while (token != NULL)
 	{
-		array[i++] = _strdup(token);
+		array[i++] = strdup(token);
 		token = strtok(NULL, " \t\n");
 	}
 	array[i] = NULL;
 	return (array);
 }
-
-/**
- * 
- * 
- */
-void remove_comments(char *line)
-{}
