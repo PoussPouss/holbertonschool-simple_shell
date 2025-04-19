@@ -39,12 +39,12 @@ char *find_path_command(char *command);
 void free_path_list(path_node_t *head);
 
 /* Fonctions principales du shell */
-void shell_loop(void);
+ssize_t read_command(char **buffer, size_t *bufsize);
+int execute_command(char *command_path, char **args);
+int process_command(char *buffer);
 
 /* Parsing et traitement des arguments */
-char *read_line(void);
 char **split_string(char *str);
-void remove_comments(char *line);
 
 /* Utilitaires pour les fichiers */
 int _which(char *filename);
