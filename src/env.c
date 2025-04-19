@@ -1,17 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <sys/stat.h>
 #include "shell.h"
 
 /**
- * _getenv - Récupère la valeur d'une variable d'environnement
- * @name: Nom de la variable d'environnement à rechercher
+ * _getenv - Gets the value of an environment variable
+ * @name: Name of the environment variable to search for
  *
- * Return: Pointeur vers la valeur de la variable, ou NULL si non trouvée
+ * Return: Pointer to the value of the variable, or NULL if not found
  */
 char *_getenv(const char *name)
 {
@@ -32,10 +28,10 @@ char *_getenv(const char *name)
 }
 
 /**
- * find_env_index - Trouve l'index d'une variable d'environnement
- * @name: Nom de la variable à trouver
+ * find_env_index - Finds the index of an environment variable
+ * @name: Name of the variable to find
  *
- * Return: Index de la variable ou -1 si non trouvée
+ * Return: Index of the variable or -1 if not found
  */
 int find_env_index(const char *name)
 {
@@ -54,12 +50,12 @@ int find_env_index(const char *name)
 }
 
 /**
- * _setenv - Modifie ou ajoute une variable d'environnement
- * @name: Nom de la variable
- * @value: Valeur à assigner
- * @overwrite: Flag indiquant s'il faut écraser une variable existante
+ * _setenv - Modifies or adds an environment variable
+ * @name: Name of the variable
+ * @value: Value to assign
+ * @overwrite: Flag indicating whether to overwrite an existing variable
  *
- * Return: 0 en cas de succès, -1 en cas d'erreur
+ * Return: 0 on success, -1 on error
  */
 int _setenv(const char *name, const char *value, int overwrite)
 {
@@ -106,10 +102,10 @@ int _setenv(const char *name, const char *value, int overwrite)
 }
 
 /**
- * _unsetenv - Supprime une variable d'environnement
- * @name: Nom de la variable à supprimer
+ * _unsetenv - Removes an environment variable
+ * @name: Name of the variable to remove
  *
- * Return: 0 en cas de succès, -1 en cas d'erreur
+ * Return: 0 on success, -1 on error
  */
 int _unsetenv(const char *name)
 {
@@ -133,7 +129,7 @@ int _unsetenv(const char *name)
 }
 
 /**
- * print_env - Affiche toutes les variables d'environnement
+ * print_env - Displays all environment variables
  */
 void print_env(void)
 {

@@ -1,20 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <string.h>
-#include <stddef.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <sys/stat.h>
 #include "shell.h"
 
 /**
- * main - Point d'entrée du programme shell
+ * main - Entry point of the shell program
  *
- * Cette fonction implémente un shell simple qui lit les entrées utilisateur,
- * les analyse et exécute les commandes dans un processus enfant.
+ * This function implements a simple shell that reads user input,
+ * parses it and executes commands in a child process.
  *
- * Return: 0 en cas de succès, ou un code d'erreur en cas d'échec
+ * Return: 0 on success, or an error code on failure
  */
 int main(void)
 {

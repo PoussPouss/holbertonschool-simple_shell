@@ -4,15 +4,14 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <sys/stat.h>
 #include "shell.h"
 
 /**
- * read_command - Affiche le prompt et lit la commande de l'utilisateur
- * @buffer: Pointeur vers le buffer qui contiendra la commande
- * @bufsize: Pointeur vers la taille du buffer
+ * read_command - Displays the prompt and reads the user command
+ * @buffer: Pointer to the buffer that will contain the command
+ * @bufsize: Pointer to the buffer size
  *
- * Return: Nombre de caractères lus, ou -1 si EOF
+ * Return: Number of characters read, or -1 if EOF
  */
 ssize_t read_command(char **buffer, size_t *bufsize)
 {
@@ -37,11 +36,11 @@ ssize_t read_command(char **buffer, size_t *bufsize)
 }
 
 /**
- * execute_command - Exécute une commande avec ses arguments
- * @command_path: Chemin complet de la commande à exécuter
- * @args: Tableau d'arguments de la commande
+ * execute_command - Executes a command with its arguments
+ * @command_path: Full path of the command to execute
+ * @args: Array of command arguments
  *
- * Return: 0 en cas de succès, -1 en cas d'erreur
+ * Return: 0 on success, -1 on error
  */
 int execute_command(char *command_path, char **args)
 {
@@ -83,10 +82,10 @@ int execute_command(char *command_path, char **args)
 }
 
 /**
- * process_command - Traite la ligne de commande saisie
- * @buffer: La ligne de commande à traiter
+ * process_command - Processes the input command line
+ * @buffer: The command line to process
  *
- * Return: 0 pour continuer l'exécution, -1 pour quitter
+ * Return: 0 to continue execution, -1 to exit
  */
 int process_command(char *buffer)
 {

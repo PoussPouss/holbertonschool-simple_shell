@@ -1,6 +1,6 @@
-#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
 #include "shell.h"
 
@@ -68,7 +68,6 @@ int print_path_list(const path_node_t *head)
 		return (1);
 	}
 
-	/* Parcourir la liste chainée et afficher chaque répertoire */
 	current = head;
 	while (current != NULL)
 	{

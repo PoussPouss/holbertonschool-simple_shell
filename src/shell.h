@@ -24,29 +24,23 @@ typedef struct path_node
 	struct path_node *next;
 } path_node_t;
 
-/* Gestion des variables d'environnement */
 char *_getenv(const char *name);
 int find_env_index(const char *name);
 int _setenv(const char *name, const char *value, int overwrite);
 int _unsetenv(const char *name);
 void print_env(void);
 
-/* Manipulation des chemins PATH */
 path_node_t *build_path_list(void);
 int print_path_list(const path_node_t *head);
 int print_path_directories(void);
 char *find_path_command(char *command);
 void free_path_list(path_node_t *head);
 
-/* Fonctions principales du shell */
 ssize_t read_command(char **buffer, size_t *bufsize);
 int execute_command(char *command_path, char **args);
 int process_command(char *buffer);
 
-/* Parsing et traitement des arguments */
 char **split_string(char *str);
-
-/* Utilitaires pour les fichiers */
 int _which(char *filename);
 
 #endif
