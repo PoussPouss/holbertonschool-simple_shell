@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include "path.h"
-
-/**
- * build_path_list - Builds a linked list of directories from PATH environment
- *
- * Return: Pointer to the head of the linked list, or NULL on failure
-=======
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,17 +9,12 @@
  * directories from the PATH environment variable.
  *
  * Return: A pointer to the head of the linked list, or NULL on failure.
->>>>>>> origin/main
  */
 path_node_t *build_path_list(void)
 {
 	char *path_value, *token, *path_copy;
 	path_node_t *head = NULL, *new_node;
 
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/main
 	path_value = _getenv("PATH");
 	if (path_value == NULL)
 		return (NULL);
@@ -39,12 +23,8 @@ path_node_t *build_path_list(void)
 	if (path_copy == NULL)
 		return (NULL);
 
-<<<<<<< HEAD
-	token = strtok(path_copy, ':');
-=======
 	token = strtok(path_copy, ":");
 
->>>>>>> origin/main
 	while (token != NULL)
 	{
 		new_node = malloc(sizeof(path_node_t));
@@ -61,64 +41,15 @@ path_node_t *build_path_list(void)
 			free(path_copy);
 			return (NULL);
 		}
-<<<<<<< HEAD
-
-		new_node->next = head;
-		head = new_node;
-
-		token = strtok(NULL, ':');
-	}
-
-=======
 		new_node->next = head;
 		head = new_node;
 		token = strtok(NULL, ":");
 	}
->>>>>>> origin/main
 	free(path_copy);
 	return (head);
 }
 
 /**
-<<<<<<< HEAD
- * print_path_directories - Affiche chaque répertoire du PATH, un par ligne
- *
- * Return: 0 en cas de succès, 1 si PATH n'existe pas
- */
-int print_path_directories(void)
-{
-	char *path, *path_copy, *dir;
-
-	/* Récupérer la variable d'environnement PATH */
-	path = _getenv("PATH");
-	if (path == NULL)
-	{
-		fprintf(stderr, "PATH variable not found\n");
-		return (1);
-	}
-
-	 /* Dupliquer la chaîne PATH pour la manipulation avec strtok */
-	path_copy = strdup(path);
-	if (path_copy == NULL)
-	{
-		fprintf(stderr, "Memory allocation error\n");
-		return (1);
-	}
-
-	/* Séparer la chaîne PATH en utilisant ":" comme délimiteur */
-	dir = strtok(path_copy, ":");
-	while (dir != NULL)
-	{
-		printf("%s\n", dir);
-		dir = strtok(NULL, ":");
-	}
-
-	/* Libérer la mémoire allouée */
-	free(path_copy);
-
-	return (0);
-}
-=======
  * print_path_list - Prints the directories in the linked list of PATH.
  * @head: Pointer to the head of the linked list.
  *
@@ -265,4 +196,3 @@ void free_path_list(path_node_t *head)
 		current = next_node;
 	}
 }
->>>>>>> origin/main
