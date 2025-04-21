@@ -50,7 +50,6 @@ int main(int argc, char **argv)
 
 		cmd_count++;
 	}
-
 	free(buffer);
 	return (exit_status);
 }

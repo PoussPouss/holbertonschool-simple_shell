@@ -19,11 +19,7 @@ int handle_builtin_exit(char **args)
 
 	for (i = 0; args[i]; i++)
 		free(args[i]);
+
 	free(args);
-
-
 	exit(EXIT_SUCCESS);
-
-
-	return (-1);
 }

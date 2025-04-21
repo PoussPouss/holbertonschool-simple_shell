@@ -4,19 +4,6 @@
 #include "shell.h"
 
 /**
- * handle_exit_status - Handles various exit statuses
- * @status: The exit status to handle
- * @is_interactive: Whether the shell is running in interactive mode
- *
- * Return: The original status
- */
-int handle_exit_status(int status, int is_interactive)
-{
-	(void)is_interactive; /* Unused parameter */
-	return (status);
-}
-
-/**
  * handle_builtin_env - Handles the env built-in command
  * @args: Array of command arguments
  *

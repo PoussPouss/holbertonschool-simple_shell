@@ -49,7 +49,6 @@ int command_error(char **args, char *prog_name, int cmd_count);
 
 char **split_string(char *str);
 int _which(char *filename);
-int handle_exit_status(int status, int is_interactive);
 int handle_builtin_exit(char **args);
 int handle_builtin_env(char **args);
 
