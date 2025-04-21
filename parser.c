@@ -23,7 +23,6 @@ char **split_string(char *str)
 
 	tmp = strdup(str);
 	token = strtok(tmp, " \t\n");
-
 	while (token != NULL)
 	{
 		words++;
@@ -34,11 +33,21 @@ char **split_string(char *str)
 
 	if (array == NULL)
 		return (NULL);
-
 	token = strtok(str, " \t\n");
 	while (token != NULL)
 	{
-		array[i++] = strdup(token);
+		array[i] = strdup(token);
+		if (array[i] == NULL)
+		{
+			while (i > 0)
+			{
+				i--;
+				free(array[i]);
+			}
+			free(array);
+			return (NULL);
+		}
+		i++;
 		token = strtok(NULL, " \t\n");
 	}
 	array[i] = NULL;
