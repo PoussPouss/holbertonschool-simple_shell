@@ -157,7 +157,7 @@ int check_builtin(char **args)
 			/* Imprime chaques variables d'environnement */
 			printf("%s\n", environ[i]);
 		}
-		return (0); /* Continue shell execution après print env */
+		return (1); /* Continue shell execution après print env */
 	}
 
 	/* Ce n'est pas un built-in reconnu */
