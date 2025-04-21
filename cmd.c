@@ -168,6 +168,7 @@ int command_error(char **args, char *prog_name, int cmd_count)
 	return (code_return);
 }
 
+
 /**
  * handle_exit - Handles the exit built-in command
  * @args: Array of command arguments
@@ -176,29 +177,28 @@ int command_error(char **args, char *prog_name, int cmd_count)
  *
  * Return: -1 to exit, 2 for invalid argument
  */
-int handle_exit(char **args, char *prog_name, int cmd_count)
+int handle_exit(char **args)
 {
-	int i, exit_code;
-	char *endptr;
+	int i, j;
 
 	if (args[1] != NULL)
 	{
-		exit_code = strtol(args[1], &endptr, 10);
-
-		if (*endptr != '\0')
+		for (j = 0; args[1][j] != '\0'; j++)
 		{
-			fprintf(stderr, "%s: %d: exit: Illegal number: %s\n",
-				prog_name, cmd_count, args[1]);
+			if (j == 0 && args[1][j] == '-')
+				continue;
 
-			for (i = 0; args[i]; i++)
-				free(args[i]);
-			free(args);
-			return (2);
+			if (args[1][j] < '0' || args[1][j] > '9')
+			{
+				for (i = 0; args[i]; i++)
+					free(args[i]);
+				free(args);
+				return (2);
+			}
 		}
 	}
 	for (i = 0; args[i]; i++)
 		free(args[i]);
 	free(args);
-
 	return (-1);
 }
