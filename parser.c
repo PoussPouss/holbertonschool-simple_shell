@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "shell.h"
 
 /**
@@ -71,14 +68,4 @@ int _which(char *filename)
 		return (0);
 	}
 	return (-1);
-}
-
-/**
- * handle_sigint - Signal handler for SIGINT (Ctrl+C)
- * @sig: Signal number
- */
-void handle_sigint(int sig)
-{
-	(void)sig;
-	write(STDOUT_FILENO, "\n$ ", 3);
 }
