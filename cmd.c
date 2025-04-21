@@ -143,7 +143,6 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
  *
  * Return: Always returns 0
  */
-
 int command_error(char **args, char *prog_name, int cmd_count)
 {
 	int i, code_return;
