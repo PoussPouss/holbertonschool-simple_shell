@@ -104,7 +104,21 @@ int process_command(char *buffer)
 		fprintf(stderr, "Memory allocation error\n");
 		return (0);
 	}
-
+	if (strcmp(args[0], "exit") == 0)
+	{
+		for (i = 0; args[i]; i++)
+			free(args[i]);
+		free(args);
+		return (-1);
+	}
+	if (strcmp(args[0], "env") == 0)
+	{
+		print_env();
+		for (i = 0; args[i]; i++)
+			free(args[i]);
+		free(args);
+		return (0);
+	}
 	command_path = find_path_command(args[0]);
 	if (command_path == NULL)
 	{
@@ -114,7 +128,24 @@ int process_command(char *buffer)
 		free(args);
 		return (0);
 	}
-
 	return (execute_command(command_path, args));
 }
 
+/**
+*check_builtin - Vérifie si la commande est un built-in et l'exécute
+ * @args: Tableau d'arguments de la commande
+ *
+ *Return: 1 si c'est un built-in exécuté, 0 sinon
+ */
+int check_builtin(char **args)
+{
+	/* Vérifier si la commande est "exit" */
+	if (args[0] && strcmp(args[0], "exit") == 0)
+	{
+		/* Commande exit détectée, retourner 0 pour sortir de la boucle */
+		return (1);
+	}
+
+	/* Ce n'est pas un built-in reconnu */
+	return (0);
+}

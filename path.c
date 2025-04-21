@@ -86,40 +86,12 @@ int print_path_list(const path_node_t *head)
  */
 int print_path_directories(void)
 {
-	char *path_value, *token, *path_copy;
-	path_node_t *head = NULL, *new_node;
+	path_node_t *head;
 	int result;
 
-	path_value = _getenv("PATH");
-	if (path_value == NULL)
+	head = build_path_list();
+	if (head == NULL)
 		return (-1);
-
-	path_copy = strdup(path_value);
-	if (path_copy == NULL)
-		return (-1);
-
-	token = strtok(path_copy, ":");
-	while (token != NULL)
-	{
-		new_node = malloc(sizeof(path_node_t));
-		if (new_node == NULL)
-		{
-			free(path_copy);
-			return (-1);
-		}
-
-		new_node->directory = strdup(token);
-		if (new_node->directory == NULL)
-		{
-			free(new_node);
-			free(path_copy);
-			return (-1);
-		}
-		new_node->next = head;
-		head = new_node;
-		token = strtok(NULL, ":");
-	}
-	free(path_copy);
 
 	result = print_path_list(head);
 
@@ -161,18 +133,22 @@ char *find_path_command(char *command)
 	{
 		full_path = malloc(strlen(current->directory) + strlen(command) + 2);
 		if (!full_path)
+		{
+			free_path_list(path_list);
 			return (NULL);
-
+		}
 		sprintf(full_path, "%s/%s", current->directory, command);
 
 		if (stat(full_path, &st) == 0 && (st.st_mode & S_IXUSR))
 		{
+			free_path_list(path_list);
 			return (full_path);
 		}
 
 		free(full_path);
 		current = current->next;
 	}
+	free_path_list(path_list);
 	return (NULL);
 }
 

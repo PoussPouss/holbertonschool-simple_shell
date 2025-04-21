@@ -24,7 +24,8 @@ int main(void)
 		if (characters == -1)
 			break;
 
-		process_command(buffer);
+		if (process_command(buffer) == -1)
+			break;
 	}
 
 	free(buffer);

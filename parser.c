@@ -23,7 +23,6 @@ char **split_string(char *str)
 
 	tmp = strdup(str);
 	token = strtok(tmp, " \t\n");
-
 	while (token != NULL)
 	{
 		words++;
@@ -34,13 +33,42 @@ char **split_string(char *str)
 
 	if (array == NULL)
 		return (NULL);
-
 	token = strtok(str, " \t\n");
 	while (token != NULL)
 	{
-		array[i++] = strdup(token);
+		array[i] = strdup(token);
+		if (array[i] == NULL)
+		{
+			while (i > 0)
+			{
+				i--;
+				free(array[i]);
+			}
+			free(array);
+			return (NULL);
+		}
+		i++;
 		token = strtok(NULL, " \t\n");
 	}
 	array[i] = NULL;
 	return (array);
+}
+
+/**
+ * _which - Checks if a command exists in the PATH
+ * @filename: The command to check
+ *
+ * Return: 0 if found, -1 otherwise
+ */
+int _which(char *filename)
+{
+	char *path = find_path_command(filename);
+
+	if (path != NULL)
+	{
+		printf("%s\n", path);
+		free(path);
+		return (0);
+	}
+	return (-1);
 }
