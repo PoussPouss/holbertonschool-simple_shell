@@ -27,17 +27,20 @@ int main(void)
 			break;
 		args = split_string(buffer);
 
-		if (args != NULL && check_builtin(args))
+		if (args != NULL && args[0] != NULL)
 		{
-			if (args[0] && strcmp(args[0], "exit") == 0)
+			/* Vérifier directement si c'est "exit" avant tout autre traitement */
+			if (strcmp(args[0], "exit") == 0)
 			{
-			free(args);
-			break;
+				free(args);
+				break;
 			}
-			/* Si c'est "env" ou un autre built-in, on continue la boucle */
-			free(args);
-			continue;
-		}
+			    /* Ensuite vérifier les autres built-ins */
+				if (check_builtin(args))
+				{
+					free(args);
+					continue;
+				}
 
 		if (args != NULL)
 		free(args);
