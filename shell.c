@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 #include "shell.h"
 
 /**
@@ -32,10 +33,7 @@ int main(int argc, char **argv)
 
 		characters = getline(&buffer, &bufsize, stdin);
 		if (characters == -1)
-		{
-			if (is_interactive)
 			break;
-		}
 
 		if (buffer[characters - 1] == '\n')
 			buffer[characters - 1] = '\0';

@@ -1,5 +1,6 @@
 #ifndef SHELL_H
 #define SHELL_H
+
 #define EXIT_SUCCESS 0
 #define EXIT_ERROR 1
 #define EXIT_CMD_NOT_FOUND 127
@@ -49,7 +50,9 @@ int command_error(char **args, char *prog_name, int cmd_count);
 
 char **split_string(char *str);
 int _which(char *filename);
+
 int handle_builtin_exit(char **args);
 int handle_builtin_env(char **args);
+int handle_builtin_pid(char **args);
 
 #endif

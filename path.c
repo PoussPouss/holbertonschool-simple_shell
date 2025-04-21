@@ -123,7 +123,6 @@ char *find_path_command(char *command)
 			return (strdup(command));
 		return (NULL);
 	}
-
 	path_list = build_path_list();
 	if (!path_list)
 		return (NULL);

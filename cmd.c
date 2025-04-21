@@ -122,6 +122,9 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 	if (strcmp(args[0], "env") == 0)
 		return (handle_builtin_env(args));
 
+	if (strcmp(args[0], "pid") == 0)
+		return (handle_builtin_pid(args));
+
 	command_path = find_path_command(args[0]);
 	if (command_path == NULL)
 	{
