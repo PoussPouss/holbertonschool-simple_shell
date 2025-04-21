@@ -117,20 +117,11 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 		return (EXIT_SUCCESS);
 	}
 	if (strcmp(args[0], "exit") == 0)
-	{
-		for (i = 0; args[i]; i++)
-			free(args[i]);
-		free(args);
-		return (-1);
-	}
+		return (handle_builtin_exit(args));
+
 	if (strcmp(args[0], "env") == 0)
-	{
-		print_env();
-		for (i = 0; args[i]; i++)
-			free(args[i]);
-		free(args);
-		return (EXIT_SUCCESS);
-	}
+		return (handle_builtin_env(args));
+
 	command_path = find_path_command(args[0]);
 	if (command_path == NULL)
 	{
