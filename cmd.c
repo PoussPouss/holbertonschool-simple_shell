@@ -139,11 +139,25 @@ int process_command(char *buffer)
  */
 int check_builtin(char **args)
 {
+	int i;
 	/* Vérifier si la commande est "exit" */
 	if (args[0] && strcmp(args[0], "exit") == 0)
 	{
 		/* Commande exit détectée, retourner 0 pour sortir de la boucle */
 		return (1);
+	}
+
+	/* Check si la commande est env */
+
+	if (args[0] && strcmp(args[0], "env") == 0)
+	{
+		/*Print environnement variables */
+		for (i = 0; environ[i] != NULL; i++)
+		{
+			/* Imprime chaques variables d'environnement */
+			printf("%s\n", environ[i]);
+		}
+		return (0); /* Continue shell execution après print env */
 	}
 
 	/* Ce n'est pas un built-in reconnu */
