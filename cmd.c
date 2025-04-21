@@ -117,7 +117,7 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 		return (EXIT_SUCCESS);
 	}
 	if (strcmp(args[0], "exit") == 0)
-		return (handle_builtin_exit(args));
+		return (-1);
 
 	if (strcmp(args[0], "env") == 0)
 		return (handle_builtin_env(args));
@@ -159,7 +159,7 @@ int command_error(char **args, char *prog_name, int cmd_count)
 	}
 	else
 	{
-		fprintf(stderr, "%s: %d: %s: command not found\n",
+		fprintf(stderr, "%s: %d: %s: not found\n",
 			 prog_name, cmd_count, args[0]);
 		code_return = (EXIT_CMD_NOT_FOUND);
 	}

@@ -5,7 +5,7 @@
 #include "shell.h"
 
 /**
- * main - Entry point of the shell program (version 0.2)
+ * main - Entry point of the shell program
  *
  * This function implements a simple shell that reads user input,
  * parses it, searches for the command in PATH, and executes it.
@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 	while (1)
 	{
 		if (is_interactive)
-			printf("$ ");
+			printf("($) ");
 
 		characters = getline(&buffer, &bufsize, stdin);
 		if (characters == -1)

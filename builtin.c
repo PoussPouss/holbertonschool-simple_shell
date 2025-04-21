@@ -36,7 +36,7 @@ int handle_builtin_env(char **args)
  *
  * Return: Does not return, calls exit() directly
  */
-int handle_builtin_exit(char **args)
+void handle_builtin_exit(char **args)
 {
 	int i;
 
@@ -45,7 +45,6 @@ int handle_builtin_exit(char **args)
 
 	free(args);
 	exit(EXIT_SUCCESS);
-	return (0);
 }
 
 /**
