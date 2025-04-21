@@ -1,0 +1,89 @@
+.TH HSH 1 "April 21 2025" "Version 1.0" "Manual HSH"
+
+.SH NAME
+hsh \- simple shell command interpreter
+
+.SH SYNOPSIS
+.B hsh
+.RI [ options ]
+.RI [ file ]
+
+.SH DESCRIPTION
+.B hsh
+is a command language interpreter that executes commands read from the standard input or from a file.
+It is a simplified version of the standard Unix shell, implementing basic shell functionality.
+
+.SH INVOCATION
+If no arguments are present and if the standard input is connected to a terminal,
+the shell is considered an interactive shell. An interactive shell prompts before
+each command and handles programming and command errors differently.
+
+.B hsh
+can be invoked with no arguments (interactive mode) or with input redirected
+from a file or piped from another command (non-interactive mode).
+
+.SH COMMAND EXECUTION
+When a command is entered, the shell searches for it in the following sequence:
+.IP \[bu] 2
+Check if it is a built-in command
+.IP \[bu] 2
+Check if it contains a slash (/); if so, execute it as is
+.IP \[bu] 2
+Search for it in the PATH environment variable
+
+If the command is found and has execute permission, it is invoked with any remaining arguments.
+Otherwise, an error message is displayed.
+
+.SH BUILT-IN COMMANDS
+.TP
+.B exit
+Exit the shell with a status of 0 or with the value of the first argument.
+
+.TP
+.B env
+Print the current environment variables.
+
+.TP
+.B pid
+Display the process ID of the current shell instance.
+
+.SH ENVIRONMENT
+.TP
+.B PATH
+A colon-separated list of directories to search for commands. The format is dir1:dir2:....
+
+.SH EXIT STATUS
+The simple shell returns:
+.IP \[bu] 2
+0 for successful command execution
+.IP \[bu] 2
+2 for "No such file or directory" errors
+.IP \[bu] 2
+126 for "Permission denied" errors
+.IP \[bu] 2
+127 for "Command not found" errors
+
+.SH EXAMPLES
+.TP
+Interactive mode:
+.nf
+$ ./hsh
+$ ls -l
+$ echo "Hello World"
+$ exit
+.fi
+
+.TP
+Non-interactive mode:
+.nf
+$ echo "ls -l" | ./hsh
+$ echo -e "ls\\npwd\\nexit" | ./hsh
+.fi
+
+.SH BUGS
+The current implementation doesn't handle arguments for the exit built-in command.
+There are some unused functions in the code that are reserved for future enhancements.
+Memory leaks might occur if the shell is terminated abruptly without proper cleanup.
+
+.SH AUTHORS
+Lucas Boyadjian and Guillaume Font
