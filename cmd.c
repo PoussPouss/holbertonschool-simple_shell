@@ -65,8 +65,7 @@ int execute_command(char *command_path, char **args, char *prog_name,
 	{
 		if (execve(command_path, args, environ) == -1)
 		{
-			fprintf(stderr, "%s: %d: %s: No such file or directory\n",
-				prog_name, cmd_count, args[0]);
+			fprintf(stderr, "%s: %d: %s: not found\n", prog_name, cmd_count, args[0]);
 			free(command_path);
 			for (i = 0; args[i]; i++)
 				free(args[i]);
