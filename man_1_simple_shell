@@ -1,7 +1,7 @@
-.TH HSH 1 "April 21 2025" "Version 1.0" "Manual HSH"
+.TH HSH 1 "April 2025" "Version 1.0" "HSH MAN-PAGE"
 
 .SH NAME
-hsh \- simple shell command interpreter
+hsh \- simple shell
 
 .SH SYNOPSIS
 .B hsh
