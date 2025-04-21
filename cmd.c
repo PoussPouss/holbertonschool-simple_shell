@@ -44,69 +44,77 @@ ssize_t read_command(char **buffer, size_t *bufsize)
  *
  * Return: 0 on success, -1 on error
  */
-int execute_command(char *command_path, char **args, char *prog_name,
-	int cmd_count)
+int execute_command(char *command_path, char **args,
+	char *prog_name, int cmd_count)
 {
 	pid_t child_pid;
-	int status, i;
+	int status, exit_status = 0, i;
 
 	child_pid = fork();
 	if (child_pid == -1)
 	{
-		perror("Error");
+		perror("Error: fork failed");
 		free(command_path);
 		for (i = 0; args[i]; i++)
 			free(args[i]);
 		free(args);
-		return (-1);
+		return (EXIT_ERROR);
 	}
-
 	if (child_pid == 0)
 	{
 		if (execve(command_path, args, environ) == -1)
 		{
-			fprintf(stderr, "%s: %d: %s: not found\n", prog_name, cmd_count, args[0]);
+			fprintf(stderr, "%s: %d: %s: Cannot execute\n",
+					prog_name, cmd_count, args[0]);
 			free(command_path);
 			for (i = 0; args[i]; i++)
 				free(args[i]);
 			free(args);
-			exit(1);
+			exit(EXIT_CMD_CANNOT_EXECUTE);
 		}
 	}
 	else
 	{
 		wait(&status);
+		if (WIFEXITED(status))
+			exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			exit_status = 128 + WTERMSIG(status);
+
 		free(command_path);
 		for (i = 0; args[i]; i++)
 			free(args[i]);
 		free(args);
 	}
-	return (0);
+	return (exit_status);
 }
 
 /**
- * process_command - Processes the input command line
- * @buffer: The command line to process
- * @prog_name: Name of the program for error messages
- * @cmd_count: Command counter for error messages
+ * process_command - Processes and executes a command from the user input
+ * @buffer: The input command string
+ * @prog_name: The name of the shell program
+ * @cmd_count: The command count for error messages
  *
- * Return: 0 to continue execution, -1 to exit
+ * Return: 0 on success, -1 to exit, or 0 if the command is not found
  */
 int process_command(char *buffer, char *prog_name, int cmd_count)
 {
-	char **args;
-	char *command_path;
-	int i;
+	char **args, *command_path;
+	int i, error_code;
 
-	if (strlen(buffer) == 0)
-		return (0);
+	if (buffer == NULL || strlen(buffer) == 0)
+		return (EXIT_SUCCESS);
+
 	args = split_string(buffer);
-	if (args == NULL || args[0] == NULL)
+	if (args == NULL)
 	{
-		if (args)
-			free(args);
 		fprintf(stderr, "Memory allocation error\n");
-		return (0);
+		return (EXIT_ALLOCATION_ERROR);
+	}
+	if (args[0] == NULL)
+	{
+		free(args);
+		return (EXIT_SUCCESS);
 	}
 	if (strcmp(args[0], "exit") == 0)
 	{
@@ -121,17 +129,50 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 		for (i = 0; args[i]; i++)
 			free(args[i]);
 		free(args);
-		return (0);
+		return (EXIT_SUCCESS);
 	}
 	command_path = find_path_command(args[0]);
 	if (command_path == NULL)
 	{
-		fprintf(stderr, "%s: %d: %s: not found\n",
-			prog_name, cmd_count, args[0]);
-		for (i = 0; args[i]; i++)
-			free(args[i]);
-		free(args);
-		return (0);
+		error_code = command_error(args, prog_name, cmd_count);
+		return (error_code);
 	}
 	return (execute_command(command_path, args, prog_name, cmd_count));
+}
+
+/**
+ * command_error - Handles command not found errors
+ * @args: Array of command arguments
+ * @prog_name: Name of the program for error messages
+ * @cmd_count: Command counter for error messages
+ *
+ * Description: This function displays an appropriate error message
+ * depending on whether the command contains a path or not.
+ * It also frees the memory allocated for args.
+ *
+ * Return: Always returns 0
+ */
+
+int command_error(char **args, char *prog_name, int cmd_count)
+{
+	int i, code_return;
+
+	if (strchr(args[0], '/') != NULL)
+	{
+		fprintf(stderr, "%s: %d: %s: No such file or directory\n",
+			prog_name, cmd_count, args[0]);
+		code_return = (EXIT_CMD_CANNOT_EXECUTE);
+	}
+	else
+	{
+		fprintf(stderr, "%s: %d: %s: command not found\n",
+			 prog_name, cmd_count, args[0]);
+		code_return = (EXIT_CMD_NOT_FOUND);
+	}
+
+	for (i = 0; args[i]; i++)
+		free(args[i]);
+	free(args);
+
+	return (code_return);
 }

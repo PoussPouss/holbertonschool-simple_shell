@@ -4,10 +4,10 @@
 #include "shell.h"
 
 /**
- * main - Entry point of the shell program
+ * main - Entry point of the shell program (version 0.2)
  *
  * This function implements a simple shell that reads user input,
- * parses it and executes commands in a child process.
+ * parses it, searches for the command in PATH, and executes it.
  *
  * @argc: The number of command-line arguments
  * @argv: An array of strings representing the command-line arguments
@@ -16,28 +16,43 @@
  */
 int main(int argc, char **argv)
 {
-	char *buffer = NULL;
 	size_t bufsize = 0;
 	ssize_t characters;
-	int cmd_count = 1;
-	char *prog_name;
+	char *prog_name, *buffer = NULL;
+	int exit_status = EXIT_SUCCESS, is_interactive, cmd_count = 1;
 
 	(void)argc;
 	prog_name = argv[0];
+	is_interactive = isatty(STDIN_FILENO);
 
 	while (1)
 	{
-		characters = read_command(&buffer, &bufsize);
+		if (is_interactive)
+			printf("$ ");
 
+		characters = getline(&buffer, &bufsize, stdin);
 		if (characters == -1)
+		{
+			if (is_interactive)
+				printf("\nExiting shell (EOF received).\n");
 			break;
+		}
 
-		if (process_command(buffer, prog_name, cmd_count) == -1)
+		if (buffer[characters - 1] == '\n')
+			buffer[characters - 1] = '\0';
+
+		if (strlen(buffer) == 0)
+			continue;
+
+		exit_status = process_command(buffer, prog_name, cmd_count);
+		exit_status = handle_exit_status(exit_status, is_interactive);
+
+		if (exit_status == EXIT_SUCCESS && exit_status != 0)
 			break;
 
 		cmd_count++;
 	}
 
 	free(buffer);
-	return (0);
+	return (exit_status);
 }

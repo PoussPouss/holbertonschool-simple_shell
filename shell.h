@@ -1,5 +1,11 @@
 #ifndef SHELL_H
 #define SHELL_H
+#define EXIT_SUCCESS 0
+#define EXIT_ERROR 1
+#define EXIT_CMD_NOT_FOUND 127
+#define EXIT_CMD_CANNOT_EXECUTE 126
+#define EXIT_INVALID_ARG 2
+#define EXIT_ALLOCATION_ERROR 3
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,8 +45,10 @@ ssize_t read_command(char **buffer, size_t *bufsize);
 int execute_command(char *command_path, char **args, char *prog_name,
 	int cmd_count);
 int process_command(char *buffer, char *prog_name, int cmd_count);
+int command_error(char **args, char *prog_name, int cmd_count);
 
 char **split_string(char *str);
 int _which(char *filename);
+int handle_exit_status(int status, int is_interactive);
 
 #endif
