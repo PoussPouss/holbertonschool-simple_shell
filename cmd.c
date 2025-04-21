@@ -129,15 +129,11 @@ int check_builtin(char **args)
 {
 	int i;
 
-	/* Vérifier si la commande est "exit" */
+	/* Ne pas traiter "exit" ici, c'est fait dans main */
 	if (args[0] && strcmp(args[0], "exit") == 0)
-	{
-		/* Commande exit détectée, retourner 1 pour sortir de la boucle */
-		return (1);
-	}
+		return (0);  /* Retourne 0 pour que main gère "exit" */
 
 	/* Check si la commande est env */
-
 	if (args[0] && strcmp(args[0], "env") == 0)
 	{
 		/*Print environnement variables */
