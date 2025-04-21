@@ -25,6 +25,7 @@ int main(void)
 
 		if (characters == -1)
 			break;
+
 		args = split_string(buffer);
 
 		if (args != NULL && args[0] != NULL)
@@ -35,20 +36,22 @@ int main(void)
 				free(args);
 				break;
 			}
-			    /* Ensuite vérifier les autres built-ins */
-				if (check_builtin(args))
-				{
-					free(args);
-					continue;
-				}
+			/* Ensuite vérifier les autres built-ins */
+			else if (check_builtin(args))
+			{
+				free(args);
+				continue;
+			}
 
-		if (args != NULL)
-		free(args);
-
+			free(args);
+		}
+		else if (args != NULL)
+		{
+			free(args);
+		}
 		if (process_command(buffer) == -1)
 			break;
 	}
-
-	free(buffer);
-	return (0);
+		free(buffer);
+		return (0);
 }
