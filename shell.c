@@ -32,7 +32,7 @@ int main(int argc, char **argv)
 	while (1)
 	{
 		if (is_interactive)
-			printf("$ ");
+			write(STDOUT_FILENO, "$ ", 2);
 
 		characters = getline(&buffer, &bufsize, stdin);
 		if (characters == -1)
@@ -48,6 +48,7 @@ int main(int argc, char **argv)
 
 		if (exit_status == -1)
 		{
+			fflush(stdout);
 			exit_status = 0;
 			break;
 		}
