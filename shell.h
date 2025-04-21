@@ -41,5 +41,6 @@ int process_command(char *buffer);
 
 char **split_string(char *str);
 int _which(char *filename);
+int check_builtin(char **args);
 
 #endif

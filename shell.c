@@ -16,6 +16,7 @@ int main(void)
 	char *buffer = NULL;
 	size_t bufsize = 0;
 	ssize_t characters;
+	char **args;
 
 	while (1)
 	{
@@ -23,6 +24,16 @@ int main(void)
 
 		if (characters == -1)
 			break;
+		args = split_string(buffer);
+
+		if (args != NULL && check_builtin(args))
+		{
+			free(args);
+			break;
+		}
+
+		if (args != NULL)
+		free(args);
 
 		if (process_command(buffer) == -1)
 			break;
