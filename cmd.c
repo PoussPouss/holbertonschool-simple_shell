@@ -18,7 +18,7 @@ ssize_t read_command(char **buffer, size_t *bufsize)
 	ssize_t characters;
 
 	if (isatty(STDIN_FILENO))
-		printf("($) ");
+		printf("$ ");
 
 	characters = getline(buffer, bufsize, stdin);
 
@@ -117,7 +117,10 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 		return (EXIT_SUCCESS);
 	}
 	if (strcmp(args[0], "exit") == 0)
+	{
+		handle_builtin_exit(args);
 		return (-1);
+	}
 
 	if (strcmp(args[0], "env") == 0)
 		return (handle_builtin_env(args));

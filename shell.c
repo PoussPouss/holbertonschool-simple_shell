@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 	while (1)
 	{
 		if (is_interactive)
-			printf("($) ");
+			printf("$ ");
 
 		characters = getline(&buffer, &bufsize, stdin);
 		if (characters == -1)
@@ -44,7 +44,10 @@ int main(int argc, char **argv)
 		exit_status = process_command(buffer, prog_name, cmd_count);
 
 		if (exit_status == -1)
+		{
+			exit_status = 0;
 			break;
+		}
 
 		cmd_count++;
 	}
