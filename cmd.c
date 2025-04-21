@@ -100,7 +100,7 @@ int execute_command(char *command_path, char **args,
 int process_command(char *buffer, char *prog_name, int cmd_count)
 {
 	char **args, *command_path;
-	int i, error_code;
+	int error_code;
 
 	if (buffer == NULL || strlen(buffer) == 0)
 		return (EXIT_SUCCESS);
