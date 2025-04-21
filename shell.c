@@ -26,8 +26,6 @@ int main(void)
 
 		if (process_command(buffer) == -1)
 			break;
-
-		process_command(buffer);
 	}
 
 	free(buffer);

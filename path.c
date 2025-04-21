@@ -167,12 +167,14 @@ char *find_path_command(char *command)
 
 		if (stat(full_path, &st) == 0 && (st.st_mode & S_IXUSR))
 		{
+			free_path_list(path_list);
 			return (full_path);
 		}
 
 		free(full_path);
 		current = current->next;
 	}
+	free_path_list(path_list);
 	return (NULL);
 }
 

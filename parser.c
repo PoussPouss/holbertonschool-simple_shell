@@ -44,3 +44,22 @@ char **split_string(char *str)
 	array[i] = NULL;
 	return (array);
 }
+
+/**
+ * _which - Checks if a command exists in the PATH
+ * @filename: The command to check
+ *
+ * Return: 0 if found, -1 otherwise
+ */
+int _which(char *filename)
+{
+	char *path = find_path_command(filename);
+
+	if (path != NULL)
+	{
+		printf("%s\n", path);
+		free(path);
+		return (0);
+	}
+	return (-1);
+}
