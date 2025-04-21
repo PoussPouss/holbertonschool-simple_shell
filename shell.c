@@ -28,8 +28,14 @@ int main(void)
 
 		if (args != NULL && check_builtin(args))
 		{
+			if (args[0] && strcmp(args[0], "exit") == 0)
+			{
 			free(args);
 			break;
+			}
+			/* Si c'est "env" ou un autre built-in, on continue la boucle */
+			free(args);
+			continue;
 		}
 
 		if (args != NULL)
