@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stddef.h>
+#include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
@@ -50,9 +51,11 @@ int command_error(char **args, char *prog_name, int cmd_count);
 
 char **split_string(char *str);
 int _which(char *filename);
+void handle_sigint(int sig);
 
 int handle_builtin_exit(char **args);
 int handle_builtin_env(char **args);
 int handle_builtin_pid(char **args);
+
 
 #endif

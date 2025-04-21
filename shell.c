@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <signal.h>
 #include "shell.h"
 
 /**
@@ -25,6 +26,8 @@ int main(int argc, char **argv)
 	(void)argc;
 	prog_name = argv[0];
 	is_interactive = isatty(STDIN_FILENO);
+
+	signal(SIGINT, handle_sigint);
 
 	while (1)
 	{
