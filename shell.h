@@ -1,13 +1,6 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#define EXIT_SUCCESS 0
-#define EXIT_ERROR 1
-#define EXIT_CMD_NOT_FOUND 127
-#define EXIT_CMD_CANNOT_EXECUTE 126
-#define EXIT_INVALID_ARG 2
-#define EXIT_ALLOCATION_ERROR 3
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -53,9 +46,7 @@ char **split_string(char *str);
 int _which(char *filename);
 void handle_sigint(int sig);
 
-int handle_builtin_exit(char **args);
 int handle_builtin_env(char **args);
 int handle_builtin_pid(char **args);
-
 
 #endif

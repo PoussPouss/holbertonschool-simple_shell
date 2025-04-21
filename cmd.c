@@ -56,7 +56,7 @@ int execute_command(char *command_path, char **args,
 		for (i = 0; args[i]; i++)
 			free(args[i]);
 		free(args);
-		return (EXIT_ERROR);
+		return (1);
 	}
 	if (child_pid == 0)
 	{
@@ -68,7 +68,7 @@ int execute_command(char *command_path, char **args,
 			for (i = 0; args[i]; i++)
 				free(args[i]);
 			free(args);
-			exit(EXIT_CMD_CANNOT_EXECUTE);
+			exit(126);
 		}
 	}
 	else
@@ -98,25 +98,25 @@ int execute_command(char *command_path, char **args,
 int process_command(char *buffer, char *prog_name, int cmd_count)
 {
 	char **args, *command_path;
-	int error_code;
+	int error_code, i = 0;
 
 	if (buffer == NULL || strlen(buffer) == 0)
-		return (EXIT_SUCCESS);
+		return (0);
 
 	args = split_string(buffer);
 	if (args == NULL)
-	{
-		fprintf(stderr, "Memory allocation error\n");
-		return (EXIT_ALLOCATION_ERROR);
-	}
+		return (1);
+
 	if (args[0] == NULL)
 	{
 		free(args);
-		return (EXIT_SUCCESS);
+		return (0);
 	}
 	if (strcmp(args[0], "exit") == 0)
 	{
-		handle_builtin_exit(args);
+		for (i = 0; args[i]; i++)
+			free(args[i]);
+		free(args);
 		return (-1);
 	}
 
@@ -156,13 +156,13 @@ int command_error(char **args, char *prog_name, int cmd_count)
 	{
 		fprintf(stderr, "%s: %d: %s: No such file or directory\n",
 			prog_name, cmd_count, args[0]);
-		code_return = (EXIT_CMD_CANNOT_EXECUTE);
+		code_return = (2);
 	}
 	else
 	{
 		fprintf(stderr, "%s: %d: %s: not found\n",
 			 prog_name, cmd_count, args[0]);
-		code_return = (EXIT_CMD_NOT_FOUND);
+		code_return = (127);
 	}
 
 	for (i = 0; args[i]; i++)
