@@ -4,24 +4,16 @@
 #include "shell.h"
 
 /**
- * handle_builtin_exit - Handles the exit built-in command
- * @args: Array of command arguments
+ * handle_exit_status - Handles various exit statuses
+ * @status: The exit status to handle
+ * @is_interactive: Whether the shell is running in interactive mode
  *
- * Description: This function implements the exit built-in command
- * that exits the shell. It does not handle any arguments.
- * It frees memory allocated for the arguments before returning.
- *
- * Return: -1 to signal the shell to exit
+ * Return: The original status
  */
-int handle_builtin_exit(char **args)
+int handle_exit_status(int status, int is_interactive)
 {
-	int i;
-
-	for (i = 0; args[i]; i++)
-		free(args[i]);
-	free(args);
-
-	return (-1);
+	(void)is_interactive; /* Unused parameter */
+	return (status);
 }
 
 /**

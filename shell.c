@@ -34,7 +34,6 @@ int main(int argc, char **argv)
 		if (characters == -1)
 		{
 			if (is_interactive)
-				printf("\nExiting shell (EOF received).\n");
 			break;
 		}
 
@@ -45,7 +44,6 @@ int main(int argc, char **argv)
 			continue;
 
 		exit_status = process_command(buffer, prog_name, cmd_count);
-		exit_status = handle_exit_status(exit_status, is_interactive);
 
 		if (exit_status == -1)
 			break;
