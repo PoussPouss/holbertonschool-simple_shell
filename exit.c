@@ -17,15 +17,7 @@ int handle_exit_status(int status, int is_interactive)
 	{
 		if (is_interactive)
 			printf("Exiting shell.\n");
-		return (EXIT_SUCCESS);
-	}
-	else if (status > 0)
-	{
-		if (is_interactive)
-		{
-			if (status == EXIT_ALLOCATION_ERROR)
-				fprintf(stderr, "Memory allocation error occurred\n");
-		}
+		return (-1);
 	}
 	return (status);
 }

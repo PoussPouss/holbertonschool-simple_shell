@@ -47,7 +47,7 @@ int main(int argc, char **argv)
 		exit_status = process_command(buffer, prog_name, cmd_count);
 		exit_status = handle_exit_status(exit_status, is_interactive);
 
-		if (exit_status == EXIT_SUCCESS && exit_status != 0)
+		if (exit_status == -1)
 			break;
 
 		cmd_count++;
