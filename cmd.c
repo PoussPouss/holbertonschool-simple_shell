@@ -98,7 +98,7 @@ int execute_command(char *command_path, char **args,
 int process_command(char *buffer, char *prog_name, int cmd_count)
 {
 	char **args, *command_path;
-	int error_code, i = 0;
+	int error_code;
 
 	if (buffer == NULL || strlen(buffer) == 0)
 		return (0);
@@ -112,14 +112,10 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 		free(args);
 		return (0);
 	}
+
 	if (strcmp(args[0], "exit") == 0)
-	{
-		for (i = 0; args[i]; i++)
-			free(args[i]);
-		free(args);
-		fflush(stdout);
-		return (-1);
-	}
+		return (handle_exit(args, prog_name, cmd_count));
+
 	if (strcmp(args[0], "env") == 0)
 		return (handle_builtin_env(args));
 
@@ -170,4 +166,39 @@ int command_error(char **args, char *prog_name, int cmd_count)
 	free(args);
 
 	return (code_return);
+}
+
+/**
+ * handle_exit - Handles the exit built-in command
+ * @args: Array of command arguments
+ * @prog_name: Name of the program for error messages
+ * @cmd_count: Command counter for error messages
+ *
+ * Return: -1 to exit, 2 for invalid argument
+ */
+int handle_exit(char **args, char *prog_name, int cmd_count)
+{
+	int i, exit_code;
+	char *endptr;
+
+	if (args[1] != NULL)
+	{
+		exit_code = strtol(args[1], &endptr, 10);
+
+		if (*endptr != '\0')
+		{
+			fprintf(stderr, "%s: %d: exit: Illegal number: %s\n",
+				prog_name, cmd_count, args[1]);
+
+			for (i = 0; args[i]; i++)
+				free(args[i]);
+			free(args);
+			return (2);
+		}
+	}
+	for (i = 0; args[i]; i++)
+		free(args[i]);
+	free(args);
+
+	return (-1);
 }

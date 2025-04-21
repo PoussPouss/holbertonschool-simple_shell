@@ -41,6 +41,7 @@ int execute_command(char *command_path, char **args, char *prog_name,
 	int cmd_count);
 int process_command(char *buffer, char *prog_name, int cmd_count);
 int command_error(char **args, char *prog_name, int cmd_count);
+int handle_exit(char **args, char *prog_name, int cmd_count);
 
 char **split_string(char *str);
 int _which(char *filename);
