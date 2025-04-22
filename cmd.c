@@ -94,7 +94,7 @@ int execute_command(char *command_path, char **args,
 int process_command(char *buffer, char *prog_name, int cmd_count)
 {
 	char **args, *command_path;
-	int error_code, i = 0;
+	int error_code;
 
 	if (buffer == NULL || strlen(buffer) == 0)
 		return (0);
@@ -107,13 +107,6 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 	{
 		free(args);
 		return (0);
-	}
-	if (strcmp(args[0], "exit") == 0)
-	{
-		for (i = 0; args[i]; i++)
-			free(args[i]);
-		free(args);
-		exit(0);
 	}
 
 	if (strcmp(args[0], "exit") == 0)
