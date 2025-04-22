@@ -48,8 +48,7 @@ int main(int argc, char **argv)
 				free(args);
 				continue;
 			}
-
-			free(args);
+		free(args);
 		}
 		else if (args != NULL)
 		{
