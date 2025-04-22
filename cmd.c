@@ -116,11 +116,11 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 		exit(0);
 	}
 
-	if (strcmp(args[0], "env") == 0)
-		return (handle_builtin_env(args));
+	if (strcmp(args[0], "exit") == 0)
+	handle_builtin_exit(args);
 
-	if (strcmp(args[0], "pid") == 0)
-		return (handle_builtin_pid(args));
+	if (strcmp(args[0], "env") == 0)
+	return (handle_builtin_env(args));
 
 	command_path = find_path_command(args[0]);
 	if (command_path == NULL)
@@ -166,3 +166,25 @@ int command_error(char **args, char *prog_name, int cmd_count)
 
 	return (code_return);
 }
+/**
+ * handle_builtin_exit - Handles the exit built-in command
+ * @args: Array of command arguments
+ *
+ * Return: Does not return - exits the program
+ */
+void handle_builtin_exit(char **args)
+{
+	int exit_code = 0, i;
+
+	/* Vérifier si un argument est fourni */
+	if (args[1] != NULL)
+	exit_code = atoi(args[1]);
+
+	/* Libérer la mémoire */
+	for (i = 0; args[i]; i++)
+		free(args[i]);
+	free(args);
+
+	/* Sortir avec le code spécifié */
+	exit(exit_code);
+ }
