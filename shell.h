@@ -53,7 +53,7 @@ int _which(char *filename);
 void handle_sigint(int sig);
 
 /* builtin.c - Built-in command functions */
-int handle_builtin_env(char **args);
 int handle_builtin_pid(char **args);
+int handle_builtin_env(char **args);
 
 #endif

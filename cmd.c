@@ -66,6 +66,7 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 {
 	char **args, *command_path;
 	int error_code, i;
+	int exit_code = 0;
 
 	if (buffer == NULL || strlen(buffer) == 0)
 		return (0);
@@ -89,11 +90,11 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 		free(args);
 
 		/* Sortir directement avec le code 0 */
-		exit(0);
+		exit(exit_code);
 	}
 
 	if (strcmp(args[0], "env") == 0)
-	return (handle_builtin_env(args));
+		return (handle_builtin_env(args));
 
 	command_path = find_path_command(args[0]);
 	if (command_path == NULL)
