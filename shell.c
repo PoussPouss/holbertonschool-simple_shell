@@ -8,18 +8,22 @@
  *
  * @argc: The number of command-line arguments
  * @argv: An array of strings representing the command-line arguments
+ *
  * Return: 0 on success, or an error code on failure
  */
 int main(int argc, char **argv)
- {
-	 char *buffer = NULL;  /* Ajoutez cette ligne pour déclarer buffer */
-	 size_t bufsize = 0;
-	 ssize_t characters;
-	 char **args;
-	 int is_interactive = isatty(STDIN_FILENO);  /* Ajoutez cette ligne */
-	 /* Pour éviter les warnings de paramètres non utilisés */
-	 (void)argc;
-	 (void)argv;
+{
+	size_t bufsize = 0;
+	ssize_t characters;
+	char *prog_name, *buffer = NULL;
+	int exit_status = EXIT_SUCCESS, is_interactive, cmd_count = 1;
+
+	(void)argc;
+	prog_name = argv[0];
+	is_interactive = isatty(STDIN_FILENO);
+
+	signal(SIGINT, handle_sigint);
+
 	while (1)
 	{
 		if (is_interactive)
@@ -28,29 +32,23 @@ int main(int argc, char **argv)
 		characters = getline(&buffer, &bufsize, stdin);
 		if (characters == -1)
 			break;
-		args = split_string(buffer);
-		if (args != NULL && args[0] != NULL)
+
+		if (buffer[characters - 1] == '\n')
+			buffer[characters - 1] = '\0';
+
+		if (strlen(buffer) == 0)
+			continue;
+
+		exit_status = process_command(buffer, prog_name, cmd_count);
+
+		if (exit_status == -1)
 		{
-			/* Vérifier directement si c'est "exit" avant tout autre traitement */
-			if (strcmp(args[0], "exit") == 0)
-			{
-				free(args);
-				break;
-			}
-			else if (check_builtin(args))
-			{
-				free(args);
-				continue;
-			}
-		free(args);
-		}
-		else if (args != NULL)
-		{
-			free(args);
-		}
-		if (process_command(buffer) == -1)
+			exit_status = 0;
 			break;
+		}
+
+		cmd_count++;
 	}
-		free(buffer);
-		return (0);
+	free(buffer);
+	return (exit_status);
 }
