@@ -1,35 +1,6 @@
 #include "shell.h"
 
 /**
- * read_command - Displays the prompt and reads the user command
- * @buffer: Pointer to the buffer that will contain the command
- * @bufsize: Pointer to the buffer size
- *
- * Return: Number of characters read, or -1 if EOF
- */
-ssize_t read_command(char **buffer, size_t *bufsize)
-{
-	ssize_t characters;
-
-	if (isatty(STDIN_FILENO))
-		printf("($) ");
-
-	characters = getline(buffer, bufsize, stdin);
-
-	if (characters == -1)
-	{
-		if (isatty(STDIN_FILENO))
-			printf("\n");
-		return (-1);
-	}
-
-	if ((*buffer)[characters - 1] == '\n')
-		(*buffer)[characters - 1] = '\0';
-
-	return (characters);
-}
-
-/**
  * execute_command - Executes a command with its arguments
  * @command_path: Full path of the command to execute
  * @args: Array of command arguments
@@ -112,6 +83,7 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 	if (strcmp(args[0], "exit") == 0)
 	{
 		handle_builtin_exit(args);
+		return (-1);
 	}
 
 	if (strcmp(args[0], "env") == 0)
