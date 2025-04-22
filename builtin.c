@@ -12,14 +12,12 @@
  */
 int handle_builtin_env(char **args)
 {
-	int i, j;
+	int i;
 
-	for (i = 0; environ[i] != NULL; i++)
-		printf("%s\n", environ[i]);
+	print_env();
 
-	/* Libérer la mémoire */
-	for (j = 0; args[j]; j++)
-		free(args[j]);
+	for (i = 0; args[i]; i++)
+		free(args[i]);
 	free(args);
 
 	return (0);

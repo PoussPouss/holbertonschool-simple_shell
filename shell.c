@@ -27,7 +27,7 @@ int main(int argc, char **argv)
 	while (1)
 	{
 		if (is_interactive)
-			write(STDOUT_FILENO, "$ ", 2);
+			printf("($) ");
 
 		characters = getline(&buffer, &bufsize, stdin);
 		if (characters == -1)
@@ -43,8 +43,8 @@ int main(int argc, char **argv)
 
 		if (exit_status == -1)
 		{
-			free(buffer); /* Libération de buffer avant de quitter */
-			exit(EXIT_SUCCESS);      /* Sortir directement */
+			exit_status = 0;
+			break;
 		}
 
 		cmd_count++;

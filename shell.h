@@ -39,11 +39,11 @@ char *find_path_command(char *command);
 void free_path_list(path_node_t *head);
 
 /* cmd.c - Command processing functions */
+ssize_t read_command(char **buffer, size_t *bufsize);
 int execute_command(char *command_path, char **args, char *prog_name,
 	int cmd_count);
 int process_command(char *buffer, char *prog_name, int cmd_count);
 int command_error(char **args, char *prog_name, int cmd_count);
-
 
 /* parser.c - String parsing functions */
 char **split_string(char *str);
@@ -53,7 +53,7 @@ int _which(char *filename);
 void handle_sigint(int sig);
 
 /* builtin.c - Built-in command functions */
-int handle_builtin_pid(char **args);
 int handle_builtin_env(char **args);
+int handle_builtin_pid(char **args);
 
 #endif
