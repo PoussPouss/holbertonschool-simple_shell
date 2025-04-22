@@ -1,9 +1,3 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <signal.h>
 #include "shell.h"
 
 /**
@@ -29,7 +23,8 @@ int main(int argc, char **argv)
 	while (1)
 	{
 		if (is_interactive)
-			write(STDOUT_FILENO, "$ ", 2);
+			printf("($) ");
+
 		characters = getline(&buffer, &bufsize, stdin);
 		if (characters == -1)
 			break;

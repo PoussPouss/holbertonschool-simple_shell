@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
 #include "shell.h"
 
 /**
@@ -16,7 +12,7 @@ ssize_t read_command(char **buffer, size_t *bufsize)
 	ssize_t characters;
 
 	if (isatty(STDIN_FILENO))
-		printf("$ ");
+		printf("($) ");
 
 	characters = getline(buffer, bufsize, stdin);
 

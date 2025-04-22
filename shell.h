@@ -24,26 +24,36 @@ typedef struct path_node
 	struct path_node *next;
 } path_node_t;
 
+/* env.c - Environment variable functions */
 char *_getenv(const char *name);
 int find_env_index(const char *name);
 int _setenv(const char *name, const char *value, int overwrite);
 int _unsetenv(const char *name);
 void print_env(void);
 
+/* path.c - PATH handling functions */
 path_node_t *build_path_list(void);
 int print_path_list(const path_node_t *head);
 int print_path_directories(void);
 char *find_path_command(char *command);
 void free_path_list(path_node_t *head);
 
+/* cmd.c - Command processing functions */
 ssize_t read_command(char **buffer, size_t *bufsize);
 int execute_command(char *command_path, char **args);
 int process_command(char *buffer);
 int command_error(char **args, char *prog_name, int cmd_count);
 int handle_exit(char **args, char *prog_name, int cmd_count);
 
+/* parser.c - String parsing functions */
 char **split_string(char *str);
 int _which(char *filename);
-int check_builtin(char **args);
+
+/* signal.c - Signal handling functions */
+void handle_sigint(int sig);
+
+/* builtin.c - Built-in command functions */
+int handle_builtin_env(char **args);
+int handle_builtin_pid(char **args);
 
 #endif
