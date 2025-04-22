@@ -81,21 +81,22 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 		return (0);
 	}
 
-	/* Vérification simple de la commande "exit" */
 	if (strcmp(args[0], "exit") == 0)
 	{
+		/* Vérifier si un argument est fourni */
+		if (args[1] != NULL)
+		{
+			exit_code = atoi(args[1]);
+		}
 		/* Libération de la mémoire */
 		for (i = 0; args[i]; i++)
 			free(args[i]);
 		free(args);
-
-		/* Sortir directement avec le code 0 */
+		/* Sortir avec le code spécifié */
 		exit(exit_code);
 	}
-
 	if (strcmp(args[0], "env") == 0)
 		return (handle_builtin_env(args));
-
 	command_path = find_path_command(args[0]);
 	if (command_path == NULL)
 	{
