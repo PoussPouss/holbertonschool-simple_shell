@@ -65,7 +65,7 @@ int execute_command(char *command_path, char **args,
 int process_command(char *buffer, char *prog_name, int cmd_count)
 {
 	char **args, *command_path;
-	int error_code;
+	int error_code, i;
 
 	if (buffer == NULL || strlen(buffer) == 0)
 		return (0);
@@ -80,10 +80,16 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 		return (0);
 	}
 
+	/* Vérification simple de la commande "exit" */
 	if (strcmp(args[0], "exit") == 0)
 	{
-		handle_builtin_exit(args);
-		return (-1);
+		/* Libération de la mémoire */
+		for (i = 0; args[i]; i++)
+			free(args[i]);
+		free(args);
+
+		/* Sortir directement avec le code 0 */
+		exit(0);
 	}
 
 	if (strcmp(args[0], "env") == 0)
@@ -132,26 +138,4 @@ int command_error(char **args, char *prog_name, int cmd_count)
 	free(args);
 
 	return (code_return);
-}
-/**
- * handle_builtin_exit - Handles the exit built-in command
- * @args: Array of command arguments
- *
- * Return: Does not return - exits the program
- */
-void handle_builtin_exit(char **args)
-{
-	 int i;
-	 int exit_code = 0;
-
-	if (args[1] != NULL)
-	{
-		exit_code = atoi(args[1]);
-	}
-
-	for (i = 0; args[i] != NULL; i++)
-		free(args[i]);
-	free(args);
-
-	exit(exit_code);
 }
