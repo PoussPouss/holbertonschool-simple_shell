@@ -43,45 +43,28 @@ ssize_t read_command(char **buffer, size_t *bufsize)
 int execute_command(char *command_path, char **args)
 {
 	pid_t child_pid;
-	int status, exit_status = 0, i;
+	int status;
 
 	child_pid = fork();
 	if (child_pid == -1)
 	{
-		perror("Error: fork failed");
-		free(command_path);
-		for (i = 0; args[i]; i++)
-			free(args[i]);
-		free(args);
+		perror("Error");
 		return (1);
 	}
 	if (child_pid == 0)
 	{
 		if (execve(command_path, args, environ) == -1)
 		{
-			fprintf(stderr, "%s: %d: %s: Cannot execute\n",
-					prog_name, cmd_count, args[0]);
-			free(command_path);
-			for (i = 0; args[i]; i++)
-				free(args[i]);
-			free(args);
-			exit(126);
+			perror("Error");
+			exit(127);
 		}
 	}
 	else
 	{
-		wait(&status);
-		if (WIFEXITED(status))
-			exit_status = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			exit_status = 128 + WTERMSIG(status);
-
+		waitpid(child_pid, &status, 0);
 		free(command_path);
-		for (i = 0; args[i]; i++)
-			free(args[i]);
-		free(args);
 	}
-	return (exit_status);
+	return (0);
 }
 
 /**
