@@ -27,7 +27,7 @@ int main(int argc, char **argv)
 	while (1)
 	{
 		if (is_interactive)
-			printf("($) ");
+		write(STDOUT_FILENO, "$ ", 2);
 
 		characters = getline(&buffer, &bufsize, stdin);
 		if (characters == -1)
