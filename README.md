@@ -10,7 +10,46 @@ This Simple Shell project is a command line interpreter that provides a user int
 * GCC 4.8.4 or later
 * Compilation flags: -Wall -Werror -Wextra -pedantic -std=gnu89
 
-### Authorized Functions
+### Authorized functions
+* `all functions from string.h`
+* `access`
+* `chdir`
+* `close`
+* `closedir`
+* `execve`
+* `exit`
+* `_exit`
+* `fflush`
+* `fork`
+* `free`
+* `getcwd`
+* `getline`
+* `getpid`
+* `isatty`
+* `kill`
+* `malloc`
+* `open`
+* `opendir`
+* `perror`
+* `printf`
+* `fprintf`
+* `vfprintf`
+* `sprintf`
+* `putchar`
+* `read`
+* `readdir`
+* `signal`
+* `stat`
+* `lstat`
+* `fstat`
+* `strtok`
+* `wait`
+* `waitpid`
+* `wait3`
+* `wait4`
+* `write`
+
+### Functions used
 * `access`
 * `chdir`
 * `close`
@@ -19,13 +58,20 @@ This Simple Shell project is a command line interpreter that provides a user int
 * `fork`
 * `free`
 * `getline`
+* `getpid`
 * `isatty`
 * `malloc`
 * `perror`
 * `printf`
 * `fprintf`
 * `signal`
+* `sprintf`
 * `stat`
+* `strlen` 
+* `strcmp`  
+* `strchr` 
+* `strdup`
+* `strncmp`
 * `strtok`
 * `wait`
 * `write`
@@ -146,4 +192,4 @@ $ valgrind --leak-check=full --show-leak-kinds=all ./hsh
 
 ## Authors
 
-Lucas[Lucas Boyadjian](https://github.com/Yadjian92) and [Guillaume Font](https://github.com/PoussPouss)
+[Lucas Boyadjian](https://github.com/Yadjian92) and [Guillaume Font](https://github.com/PoussPouss)
