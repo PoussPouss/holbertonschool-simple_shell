@@ -45,9 +45,6 @@ int handle_exit(char **args, char *prog_name, int cmd_count);
 
 char **split_string(char *str);
 int _which(char *filename);
-void handle_sigint(int sig);
-
-int handle_builtin_env(char **args);
-int handle_builtin_pid(char **args);
+int check_builtin(char **args);
 
 #endif

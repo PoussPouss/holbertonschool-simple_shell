@@ -5,12 +5,12 @@
 #include "shell.h"
 
 /**
- * read_command - Displays the prompt and reads the user command
- * @buffer: Pointer to the buffer that will contain the command
- * @bufsize: Pointer to the buffer size
- *
- * Return: Number of characters read, or -1 if EOF
- */
+* read_command - Displays the prompt and reads the user command
+* @buffer: Pointer to the buffer that will contain the command
+* @bufsize: Pointer to the buffer size
+*
+* Return: Number of characters read, or -1 if EOF
+*/
 ssize_t read_command(char **buffer, size_t *bufsize)
 {
 	ssize_t characters;
@@ -34,16 +34,13 @@ ssize_t read_command(char **buffer, size_t *bufsize)
 }
 
 /**
- * execute_command - Executes a command with its arguments
- * @command_path: Full path of the command to execute
- * @args: Array of command arguments
- * @prog_name: Name of the program for error messages
- * @cmd_count: Command counter for error messages
- *
- * Return: 0 on success, -1 on error
- */
-int execute_command(char *command_path, char **args,
-	char *prog_name, int cmd_count)
+* execute_command - Executes a command with its arguments
+* @command_path: Full path of the command to execute
+* @args: Array of command arguments
+*
+* Return: 0 on success, -1 on error
+*/
+int execute_command(char *command_path, char **args)
 {
 	pid_t child_pid;
 	int status, exit_status = 0, i;
@@ -88,17 +85,18 @@ int execute_command(char *command_path, char **args,
 }
 
 /**
- * process_command - Processes and executes a command from the user input
- * @buffer: The input command string
- * @prog_name: The name of the shell program
- * @cmd_count: The command count for error messages
- *
- * Return: 0 on success, -1 to exit, or 0 if the command is not found
- */
-int process_command(char *buffer, char *prog_name, int cmd_count)
+* process_command - Processes the input command line
+* @buffer: The command line to process
+*
+* Return: 0 to continue execution, -1 to exit
+*/
+int process_command(char *buffer)
 {
-	char **args, *command_path;
-	int error_code;
+	char **args;
+
+	char *command_path;
+
+	int i;
 
 	if (buffer == NULL || strlen(buffer) == 0)
 		return (0);
@@ -112,92 +110,45 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 		free(args);
 		return (0);
 	}
-
-	if (strcmp(args[0], "exit") == 0)
-		return (handle_exit(args, prog_name, cmd_count));
-
-	if (strcmp(args[0], "env") == 0)
-		return (handle_builtin_env(args));
-
-	if (strcmp(args[0], "pid") == 0)
-		return (handle_builtin_pid(args));
-
 	command_path = find_path_command(args[0]);
 	if (command_path == NULL)
 	{
-		error_code = command_error(args, prog_name, cmd_count);
-		return (error_code);
-	}
-	return (execute_command(command_path, args, prog_name, cmd_count));
-}
-
-/**
- * command_error - Handles command not found errors
- * @args: Array of command arguments
- * @prog_name: Name of the program for error messages
- * @cmd_count: Command counter for error messages
- *
- * Description: This function displays an appropriate error message
- * depending on whether the command contains a path or not.
- * It also frees the memory allocated for args.
- *
- * Return: Always returns 0
- */
-int command_error(char **args, char *prog_name, int cmd_count)
-{
-	int i, code_return;
-
-	if (strchr(args[0], '/') != NULL)
-	{
-		fprintf(stderr, "%s: %d: %s: No such file or directory\n",
-			prog_name, cmd_count, args[0]);
-		code_return = (2);
-	}
-	else
-	{
-		fprintf(stderr, "%s: %d: %s: not found\n",
-			 prog_name, cmd_count, args[0]);
-		code_return = (127);
-	}
-
+	fprintf(stderr, "./hsh: %s: command not found\n", args[0]);
 	for (i = 0; args[i]; i++)
 		free(args[i]);
 	free(args);
+	return (0);
+	}
 
-	return (code_return);
+	return (execute_command(command_path, args));
 }
 
-
 /**
- * handle_exit - Handles the exit built-in command
- * @args: Array of command arguments
- *
- * Return: -1 to exit, 2 for invalid argument
- */
-int handle_exit(char **args, char *prog_name, int cmd_count)
+*check_builtin - Vérifie si la commande est un built-in et l'exécute
+* @args: Tableau d'arguments de la commande
+*
+*Return: 1 si c'est un built-in exécuté, 0 sinon
+*/
+int check_builtin(char **args)
 {
-	int i, j;
+	int i;
 
-	if (args[1] != NULL)
+	/* Ne pas traiter "exit" ici, c'est fait dans main */
+	if (args[0] && strcmp(args[0], "exit") == 0)
+		return (0);  /* Retourne 0 pour que main gère "exit" */
+
+	/* Check si la commande est env */
+	if (args[0] && strcmp(args[0], "env") == 0)
 	{
-		for (j = 0; args[1][j] != '\0'; j++)
+		/*Print environnement variables */
+		for (i = 0; environ[i] != NULL; i++)
 		{
-			if (j == 0 && args[1][j] == '-')
-				continue;
-
-			if (args[1][j] < '0' || args[1][j] > '9')
-			{
-				fprintf(stderr, "%s: %d: exit: Illegal number: %s\n",
-					prog_name, cmd_count, args[1]);
-				for (i = 0; args[i]; i++)
-					free(args[i]);
-				free(args);
-				return (2);
-			}
+			/* Imprime chaques variables d'environnement */
+			printf("%s\n", environ[i]);
 		}
+		return (1);
 	}
-	for (i = 0; args[i]; i++)
-		free(args[i]);
-	free(args);
-	return (-1);
+
+	/* Ce n'est pas un built-in reconnu */
+	return (0);
 }

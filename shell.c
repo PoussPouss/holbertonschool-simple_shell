@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
@@ -20,14 +21,7 @@ int main(int argc, char **argv)
 {
 	size_t bufsize = 0;
 	ssize_t characters;
-	char *prog_name, *buffer = NULL;
-	int exit_status = EXIT_SUCCESS, is_interactive, cmd_count = 1;
-
-	(void)argc;
-	prog_name = argv[0];
-	is_interactive = isatty(STDIN_FILENO);
-
-	signal(SIGINT, handle_sigint);
+	char **args;
 
 	while (1)
 	{
@@ -38,23 +32,32 @@ int main(int argc, char **argv)
 		if (characters == -1)
 			break;
 
-		if (buffer[characters - 1] == '\n')
-			buffer[characters - 1] = '\0';
+		args = split_string(buffer);
 
-		if (strlen(buffer) == 0)
-			continue;
-
-		exit_status = process_command(buffer, prog_name, cmd_count);
-
-		if (exit_status == -1)
+		if (args != NULL && args[0] != NULL)
 		{
-			fflush(stdout);
-			exit_status = 0;
-			break;
-		}
+			/* Vérifier directement si c'est "exit" avant tout autre traitement */
+			if (strcmp(args[0], "exit") == 0)
+			{
+				free(args);
+				break;
+			}
+			/* Ensuite vérifier les autres built-ins */
+			else if (check_builtin(args))
+			{
+				free(args);
+				continue;
+			}
 
-		cmd_count++;
+			free(args);
+		}
+		else if (args != NULL)
+		{
+			free(args);
+		}
+		if (process_command(buffer) == -1)
+			break;
 	}
-	free(buffer);
-	return (exit_status);
+		free(buffer);
+		return (0);
 }
