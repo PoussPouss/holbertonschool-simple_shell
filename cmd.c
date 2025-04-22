@@ -111,7 +111,7 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 
 	if (strcmp(args[0], "exit") == 0)
 	{
-	handle_builtin_exit(args);
+		handle_builtin_exit(args);
 	}
 
 	if (strcmp(args[0], "env") == 0)
@@ -169,35 +169,17 @@ int command_error(char **args, char *prog_name, int cmd_count)
  */
 void handle_builtin_exit(char **args)
 {
-	int exit_code = 0, i, j;
+	 int i;
+	 int exit_code = 0;
 
-	/* Vérifier si un argument est fourni et s'il est valide */
 	if (args[1] != NULL)
 	{
-		/* Vérifier si l'argument est un nombre valide */
-		for (j = 0; args[1][j]; j++)
-		{
-			if (args[1][j] < '0' || args[1][j] > '9')
-			{
-				fprintf(stderr, "./shell: 1: exit: Illegal number: %s\n", args[1]);
-
-				/* Libérer la mémoire */
-				for (i = 0; args[i]; i++)
-					free(args[i]);
-				free(args);
-
-				/* Sortir avec code d'erreur 2 (convention pour argument invalide) */
-				exit(2);
-			}
-		}
 		exit_code = atoi(args[1]);
 	}
 
-	/* Libérer la mémoire */
-	for (i = 0; args[i]; i++)
+	for (i = 0; args[i] != NULL; i++)
 		free(args[i]);
 	free(args);
 
-	/* Sortir avec le code spécifié */
 	exit(exit_code);
 }

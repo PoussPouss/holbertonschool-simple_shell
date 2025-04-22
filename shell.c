@@ -44,7 +44,7 @@ int main(int argc, char **argv)
 		if (exit_status == -1)
 		{
 			free(buffer); /* Libération de buffer avant de quitter */
-			exit(0);      /* Sortir directement */
+			exit(EXIT_SUCCESS);      /* Sortir directement */
 		}
 
 		cmd_count++;
