@@ -58,7 +58,7 @@ int execute_command(char *command_path, char **args,
 	{
 		if (execve(command_path, args, environ) == -1)
 		{
-			fprintf(stderr, "%s: %d: %s: Cannot execute\n",
+			fprintf(stderr, "%s: %d: %s: Permission denied\n",
 					prog_name, cmd_count, args[0]);
 			free(command_path);
 			for (i = 0; args[i]; i++)
