@@ -36,7 +36,7 @@ ssize_t read_command(char **buffer, size_t *bufsize)
  * @prog_name: Name of the program for error messages
  * @cmd_count: Command counter for error messages
  *
- * Return: 0 on success, -1 on error
+ * Return: Exit status of the command, 1 on fork error.
  */
 int execute_command(char *command_path, char **args,
 	char *prog_name, int cmd_count)
