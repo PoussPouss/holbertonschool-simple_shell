@@ -64,7 +64,7 @@ int execute_command(char *command_path, char **args,
 			for (i = 0; args[i]; i++)
 				free(args[i]);
 			free(args);
-			_exit(126);
+			exit(126);
 		}
 	}
 	else
