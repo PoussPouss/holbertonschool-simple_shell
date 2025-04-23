@@ -49,33 +49,6 @@ This Simple Shell project is a command line interpreter that provides a user int
 * `wait4`
 * `write`
 
-### Functions used
-* `access`
-* `chdir`
-* `close`
-* `execve`
-* `exit`
-* `fork`
-* `free`
-* `getline`
-* `getpid`
-* `isatty`
-* `malloc`
-* `perror`
-* `printf`
-* `fprintf`
-* `signal`
-* `sprintf`
-* `stat`
-* `strlen` 
-* `strcmp`  
-* `strchr` 
-* `strdup`
-* `strncmp`
-* `strtok`
-* `wait`
-* `write`
-
 ## Compilation
 
 ```bash
@@ -88,7 +61,7 @@ The Simple Shell returns:
 - `0` for successful command execution
 - `2` for "No such file or directory" errors
 - `126` for "Permission denied" errors
-- `127` for "Command not found" errors
+- `127` for "not found" errors
 - The exit code provided to the `exit` command
 
 ## Usage Examples
@@ -143,13 +116,16 @@ builtin.c  cmd.c  env.c  hsh  path.c  parser.c  README.md  shell.c  shell.h  sig
 /home/user/holbertonschool-simple_shell
 ```
 
+## Flowchart
+
+- <img src="Image/Flowchart_hsh.png"/>
+
 ## Man Page
 
-To view the man page:
+To access the man-page for our printf implementation, use the command: man ./$ man ./man_1_simple_shell
 
-```bash
-$ man ./man_1_simple_shell
-```
+- <img src="Image/Man_page1_hsh.png"/>
+- <img src="Image/Man_page2_hsh.png"/>
 
 ## Memory Leak Checking
 
