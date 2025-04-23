@@ -61,7 +61,7 @@ The simple shell returns:
 .IP \[bu] 2
 126 for "Permission denied" errors
 .IP \[bu] 2
-127 for "Command not found" errors
+127 for "not found" errors
 
 .SH EXAMPLES
 .TP
