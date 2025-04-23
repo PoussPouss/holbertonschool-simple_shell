@@ -16,11 +16,10 @@ int main(int argc, char **argv)
 	size_t bufsize = 0;
 	ssize_t characters;
 	char *prog_name, *buffer = NULL;
-	int exit_status, is_interactive, cmd_count = 1;
+	int exit_status, cmd_count = 1;
 
 	(void)argc;
 	prog_name = argv[0];
-	is_interactive = isatty(STDIN_FILENO);
 
 	signal(SIGINT, handle_sigint);
 

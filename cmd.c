@@ -141,7 +141,8 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
  * depending on whether the command contains a path or not.
  * It also frees the memory allocated for args.
  *
- * Return: Always returns 0
+ * Return: Returns 2 for "No such file or directory"
+ * or 127 for "not found" errors
  */
 int command_error(char **args, char *prog_name, int cmd_count)
 {
