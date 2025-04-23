@@ -1,7 +1,7 @@
 #include "shell.h"
 
 /**
- * main - Entry point of the shell program
+ * main - Entry point of the hsh program
  *
  * This function implements a simple shell that reads user input,
  * parses it, searches for the command in PATH, and executes it.
@@ -21,27 +21,29 @@ int main(int argc, char **argv)
 	(void)argc;
 	prog_name = argv[0];
 
-	signal(SIGINT, handle_sigint);
+	signal(SIGINT, handle_sigint);	/* Set signal handler for Ctrl+C */
 
 	while (1)
 	{
-		characters = read_command(&buffer, &bufsize);
-		if (characters == -1)
+		characters = read_command(&buffer, &bufsize);	/* Read user input */
+
+		if (characters == -1)	/* EOF (Ctrl+D) detected */
 			break;
 
-		if (strlen(buffer) == 0)
+		if (strlen(buffer) == 0) /* Skip empty commands */
 			continue;
 
+		/* Process and execute the command */
 		exit_status = process_command(buffer, prog_name, cmd_count);
 
-		if (exit_status == -1)
+		if (exit_status == -1)	/* Exit command was entered */
 		{
 			exit_status = 0;
 			break;
 		}
 
-		cmd_count++;
+		cmd_count++;	/* Increment command counter */
 	}
 	free(buffer);
-	return (exit_status);
+	return (exit_status);	/* Return exit status of last command */
 }

@@ -8,7 +8,7 @@
  * that prints the current environment. It frees memory
  * allocated for the arguments before returning.
  *
- * Return: 0 on success
+ * Return: Always returns 0 on success
  */
 int handle_builtin_env(char **args)
 {
@@ -27,7 +27,7 @@ int handle_builtin_env(char **args)
  * handle_builtin_pid - Displays the current shell's process ID
  * @args: Command arguments (unused but freed)
  *
- * Return: Always 0
+ * Return: Always returns 0 on success
  */
 int handle_builtin_pid(char **args)
 {
