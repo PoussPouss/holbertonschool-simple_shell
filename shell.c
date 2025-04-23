@@ -26,15 +26,9 @@ int main(int argc, char **argv)
 
 	while (1)
 	{
-		if (is_interactive)
-			printf("($) ");
-
-		characters = getline(&buffer, &bufsize, stdin);
+		characters = read_command(&buffer, &bufsize);
 		if (characters == -1)
 			break;
-
-		if (buffer[characters - 1] == '\n')
-			buffer[characters - 1] = '\0';
 
 		if (strlen(buffer) == 0)
 			continue;
