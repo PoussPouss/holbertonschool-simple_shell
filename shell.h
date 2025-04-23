@@ -55,8 +55,5 @@ void handle_sigint(int sig);
 /* builtin.c - Built-in command functions */
 int handle_builtin_env(char **args);
 int handle_builtin_pid(char **args);
-int handle_builtin_exit(char **args,
-	char *prog_name, int cmd_count);
-
 
 #endif

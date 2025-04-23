@@ -94,7 +94,7 @@ int execute_command(char *command_path, char **args,
 int process_command(char *buffer, char *prog_name, int cmd_count)
 {
 	char **args, *command_path;
-	int error_code;
+	int error_code, i = 0;
 
 	if (buffer == NULL || strlen(buffer) == 0)
 		return (0);
@@ -110,7 +110,10 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 	}
 	if (strcmp(args[0], "exit") == 0)
 	{
-		return (handle_builtin_exit(args, prog_name, cmd_count));
+		for (i = 0; args[i]; i++)
+			free(args[i]);
+		free(args);
+		return (-1);
 	}
 
 	if (strcmp(args[0], "env") == 0)
