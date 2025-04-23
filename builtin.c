@@ -27,7 +27,7 @@ int handle_builtin_env(char **args)
  * handle_builtin_pid - Displays the current shell's process ID
  * @args: Command arguments (unused but freed)
  *
- * Return: Always EXIT_SUCCESS
+ * Return: Always 0
  */
 int handle_builtin_pid(char **args)
 {
