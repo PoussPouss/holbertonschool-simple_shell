@@ -122,7 +122,7 @@ builtin.c  cmd.c  env.c  hsh  path.c  parser.c  README.md  shell.c  shell.h  sig
 
 ## Man Page
 
-To access the man-page for our printf implementation, use the command: man ./$ man ./man_1_simple_shell
+To access the man-page for hsh, use the command: man ./$ man ./man_1_simple_shell
 
 - <img src="Image/Man_page1_hsh.png"/>
 - <img src="Image/Man_page2_hsh.png"/>
