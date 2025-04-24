@@ -10,21 +10,25 @@
 ssize_t read_command(char **buffer, size_t *bufsize)
 {
 	ssize_t characters;
+	int interactive = isatty(STDIN_FILENO);
 
-	if (isatty(STDIN_FILENO))
+	if (interactive)
 		printf("($) ");
 
 	characters = getline(buffer, bufsize, stdin);
 
 	if (characters == -1)
 	{
-		if (isatty(STDIN_FILENO))
+		if (interactive)
 			printf("\n");
 		return (-1);
 	}
 
 	if ((*buffer)[characters - 1] == '\n')
-		(*buffer)[characters - 1] = '\0';
+	{
+		if (interactive)
+			(*buffer)[characters - 1] = '\0';
+	}
 
 	return (characters);
 }
@@ -36,7 +40,7 @@ ssize_t read_command(char **buffer, size_t *bufsize)
  * @prog_name: Name of the program for error messages
  * @cmd_count: Command counter for error messages
  *
- * Return: 0 on success, -1 on error
+ * Return: Exit status of the command, 1 on fork error.
  */
 int execute_command(char *command_path, char **args,
 	char *prog_name, int cmd_count)
@@ -58,7 +62,7 @@ int execute_command(char *command_path, char **args,
 	{
 		if (execve(command_path, args, environ) == -1)
 		{
-			fprintf(stderr, "%s: %d: %s: Cannot execute\n",
+			fprintf(stderr, "%s: %d: %s: Permission denied\n",
 					prog_name, cmd_count, args[0]);
 			free(command_path);
 			for (i = 0; args[i]; i++)
@@ -113,8 +117,7 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 		for (i = 0; args[i]; i++)
 			free(args[i]);
 		free(args);
-	exit(0);
-
+		return (-1);
 	}
 
 	if (strcmp(args[0], "env") == 0)
@@ -142,7 +145,8 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
  * depending on whether the command contains a path or not.
  * It also frees the memory allocated for args.
  *
- * Return: Always returns 0
+ * Return: Returns 2 for "No such file or directory"
+ * or 127 for "not found" errors
  */
 int command_error(char **args, char *prog_name, int cmd_count)
 {
