@@ -115,17 +115,62 @@ $ echo -e "ls\npwd\nexit" | ./hsh
 builtin.c  cmd.c  env.c  hsh  path.c  parser.c  README.md  shell.c  shell.h  signal.c
 /home/user/holbertonschool-simple_shell
 ```
+## Project Files
+
+| File        | Description                                                |
+|-------------|------------------------------------------------------------|
+| shell.c   | Main entry point of the shell with the main function       |
+| shell.h   | Header file containing prototypes and structures           |
+| cmd.c     | Functions to read, process and execute commands            |
+| env.c     | Functions to manipulate environment variables              |
+| path.c    | Functions to manage PATH and search for commands           |
+| parser.c  | Functions to analyze and split strings                     |
+| signal.c  | Signal handling functions (Ctrl+C)                         |
+| builtin.c | Implementation of built-in commands like env and pid       |
+
+## Prototypes
+
+/* env.c - Environment variable functions */
+char *_getenv(const char *name);
+int find_env_index(const char *name);
+int _setenv(const char *name, const char *value, int overwrite);
+int _unsetenv(const char *name);
+void print_env(void);
+
+/* path.c - PATH handling functions */
+path_node_t *build_path_list(void);
+int print_path_list(const path_node_t *head);
+int print_path_directories(void);
+char *find_path_command(char *command);
+void free_path_list(path_node_t *head);
+
+/* cmd.c - Command processing functions */
+ssize_t read_command(char **buffer, size_t *bufsize);
+int execute_command(char *command_path, char **args, char *prog_name, int cmd_count);
+int process_command(char *buffer, char *prog_name, int cmd_count);
+int command_error(char **args, char *prog_name, int cmd_count);
+
+/* parser.c - String parsing functions */
+char **split_string(char *str);
+int _which(char *filename);
+
+/* signal.c - Signal handling functions */
+void handle_sigint(int sig);
+
+/* builtin.c - Built-in command functions */
+int handle_builtin_env(char **args);
+int handle_builtin_pid(char **args);
 
 ## Flowchart
 
-- <img src="Image/Flowchart_hsh.png"/>
+<img src="Image/Flowchart_hsh.png"/>
 
 ## Man Page
 
 To access the man-page for hsh, use the command: man ./$ man ./man_1_simple_shell
 
-- <img src="Image/Man_page1_hsh.png"/>
-- <img src="Image/Man_page2_hsh.png"/>
+<img src="Image/Man_page1_hsh.png"/>
+<img src="Image/Man_page2_hsh.png"/>
 
 ## Memory Leak Checking
 
