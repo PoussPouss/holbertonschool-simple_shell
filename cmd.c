@@ -10,21 +10,25 @@
 ssize_t read_command(char **buffer, size_t *bufsize)
 {
 	ssize_t characters;
+	int interactive = isatty(STDIN_FILENO);
 
-	if (isatty(STDIN_FILENO))
+	if (interactive)
 		printf("($) ");
 
 	characters = getline(buffer, bufsize, stdin);
 
 	if (characters == -1)
 	{
-		if (isatty(STDIN_FILENO))
+		if (interactive)
 			printf("\n");
 		return (-1);
 	}
 
 	if ((*buffer)[characters - 1] == '\n')
-		(*buffer)[characters - 1] = '\0';
+	{
+		if (interactive)
+			(*buffer)[characters - 1] = '\0';
+	}
 
 	return (characters);
 }

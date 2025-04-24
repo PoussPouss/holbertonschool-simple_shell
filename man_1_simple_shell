@@ -81,9 +81,24 @@ $ echo -e "ls\\npwd\\nexit" | ./hsh
 .fi
 
 .SH BUGS
-The current implementation doesn't handle arguments for the exit built-in command.
-There are some unused functions in the code that are reserved for future enhancements.
-Memory leaks might occur if the shell is terminated abruptly without proper cleanup.
+.IP \[bu] 2
+The current implementation doesn't handle arguments for the exit built-in command (for example, "exit 1" is not supported).
+.IP \[bu] 2
+Signal handling through handle_sigint() may not behave correctly in all contexts, especially during long-running commands.
+.IP \[bu] 2
+Dynamic memory allocation for PATH structures might fail with very long or complex paths.
+.IP \[bu] 2
+The shell doesn't support environment variable substitutions (like $HOME or ${HOME}).
+.IP \[bu] 2
+Syntax errors in commands are not reported with detailed messages.
+.IP \[bu] 2
+The _setenv() function modifies the global environment variable without creating a copy for child processes.
+.IP \[bu] 2
+Command aliases and command history features are not supported.
+.IP \[bu] 2
+Complex commands with redirections or pipes (like 'ls > file.txt' or 'ls | grep a') are not supported.
+.IP \[bu] 2
+The pid built-in command is not standard and doesn't exist in most UNIX shells.
 
 .SH AUTHORS
 Lucas Boyadjian and Guillaume Font
