@@ -14,12 +14,12 @@ char *_getenv(const char *name)
 	if (name == NULL || *name == '\0')
 		return (NULL);
 
-	name_len = strlen(name);
+	name_len = strlen(name); /* Calculate name length once for efficiency */
 
 	for (i = 0; environ[i] != NULL; i++)
-	{
+	{	/* Check if current env matches name and is followed by '=' */
 		if (strncmp(environ[i], name, name_len) == 0 && environ[i][name_len] == '=')
-			return (&environ[i][name_len + 1]);
+			return (&environ[i][name_len + 1]); /* Return pointer to value part */
 	}
 	return (NULL);
 }
@@ -37,11 +37,11 @@ int find_env_index(const char *name)
 
 	if (name == NULL || *name == '\0')
 		return (-1);
-	 name_len = strlen(name);
-	for (i = 0; environ[i] != NULL; i++)
-	{
+	 name_len = strlen(name); /* Calculate length once */
+	for (i = 0; environ[i] != NULL; i++) /* Loop through environment */
+	{	/* Check if entry matches name pattern */
 		if (strncmp(environ[i], name, name_len) == 0 && environ[i][name_len] == '=')
-			return (i);
+			return (i); /* Return array index */
 	}
 	return (-1);
 }
@@ -63,11 +63,11 @@ int _setenv(const char *name, const char *value, int overwrite)
 	if (name == NULL || *name == '\0' || strchr(name, '=') != NULL)
 		return (-1);
 
-	 index = find_env_index(name);
+	 index = find_env_index(name); /* Check if variable already exists */
 
-	if (index >= 0 && overwrite == 0)
+	if (index >= 0 && overwrite == 0) /* Exists but no overwrite flag */
 		return (0);
-
+	/* Calculate space needed for "name=value\0" */
 	 entry_len = strlen(name) + strlen(value) + 2;
 	 new_entry = malloc(entry_len);
 	if (new_entry == NULL)
@@ -76,11 +76,11 @@ int _setenv(const char *name, const char *value, int overwrite)
 	if (index >= 0)
 	{
 		free(environ[index]);
-		environ[index] = new_entry;
+		environ[index] = new_entry; /* Replace with new entry */
 		return (0);
 	}
 	env_count = 0;
-	while (environ[env_count] != NULL)
+	while (environ[env_count] != NULL) /* Count existing environment variables */
 		env_count++;
 
 	 new_environ = malloc((env_count + 2) * sizeof(char *));
@@ -89,12 +89,12 @@ int _setenv(const char *name, const char *value, int overwrite)
 		free(new_entry);
 		return (-1);
 	}
-	for (i = 0; i < env_count; i++)
+	for (i = 0; i < env_count; i++) /* Copy existing environment pointers */
 		new_environ[i] = environ[i];
 
-	new_environ[env_count] = new_entry;
-	new_environ[env_count + 1] = NULL;
-	environ = new_environ;
+	new_environ[env_count] = new_entry; /* Add new entry */
+	new_environ[env_count + 1] = NULL; /* Terminate array with NULL */
+	environ = new_environ; /* Replace environment pointer */
 	return (0);
 }
 
@@ -111,10 +111,10 @@ int _unsetenv(const char *name)
 	if (name == NULL || *name == '\0')
 		return (-1);
 
-	index = find_env_index(name);
+	index = find_env_index(name); /* Find variable index */
 
-	if (index == -1)
-		return (0);
+	if (index == -1) /* Variable doesn't exist */
+		return (0); /* Nothing to do - consider this a success */
 
 	free(environ[index]);
 

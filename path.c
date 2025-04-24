@@ -11,17 +11,17 @@ path_node_t *build_path_list(void)
 	char *path_value, *token, *path_copy;
 	path_node_t *head = NULL, *new_node;
 
-	path_value = _getenv("PATH");
+	path_value = _getenv("PATH");  /* Get PATH environment variable */
 	if (path_value == NULL)
-		return (NULL);
+		return (NULL);  /* PATH not found */
 
-	path_copy = strdup(path_value);
+	path_copy = strdup(path_value);  /* Make a copy to avoid modifying original */
 	if (path_copy == NULL)
-		return (NULL);
+		return (NULL);  /* Memory allocation failed */
 
-	token = strtok(path_copy, ":");
+	token = strtok(path_copy, ":");  /* Split path by colons */
 
-	while (token != NULL)
+	while (token != NULL)  /* Process each directory in PATH */
 	{
 		new_node = malloc(sizeof(path_node_t));
 		if (new_node == NULL)
@@ -30,16 +30,16 @@ path_node_t *build_path_list(void)
 			return (NULL);
 		}
 
-		new_node->directory = strdup(token);
-		if (new_node->directory == NULL)
+		new_node->directory = strdup(token);  /* Copy directory path */
+		if (new_node->directory == NULL)  /* Check allocation success */
 		{
-			free(new_node);
+			free(new_node);  /* Free node if directory allocation failed */
 			free(path_copy);
 			return (NULL);
 		}
-		new_node->next = head;
-		head = new_node;
-		token = strtok(NULL, ":");
+		new_node->next = head;  /* Add to front of list (reverse order) */
+		head = new_node;  /* Update head pointer */
+		token = strtok(NULL, ":");  /* Get next directory */
 	}
 	free(path_copy);
 	return (head);
@@ -113,18 +113,18 @@ char *find_path_command(char *command)
 	char *full_path;
 	struct stat st;
 
-	if (strchr(command, '/') != NULL)
+	if (strchr(command, '/') != NULL)  /* Command contains path separator */
 	{
 		if (stat(command, &st) == 0 && (st.st_mode & S_IXUSR))
-			return (strdup(command));
-		return (NULL);
+			return (strdup(command));  /* Return copy of command as-is */
+		return (NULL);  /* Not found or not executable */
 	}
-	path_list = build_path_list();
+	path_list = build_path_list();  /* Build path list */
 	if (!path_list)
-		return (NULL);
+		return (NULL);  /* Failed to build path list */
 
-	current = path_list;
-	while (current)
+	current = path_list;  /* Start at first node */
+	while (current)  /* Try each directory */
 	{
 		full_path = malloc(strlen(current->directory) + strlen(command) + 2);
 		if (!full_path)
@@ -136,14 +136,14 @@ char *find_path_command(char *command)
 
 		if (stat(full_path, &st) == 0 && (st.st_mode & S_IXUSR))
 		{
-			free_path_list(path_list);
+			free_path_list(path_list);  /* Free the path list */
 			return (full_path);
 		}
 
 		free(full_path);
-		current = current->next;
+		current = current->next;  /* Move to next directory */
 	}
-	free_path_list(path_list);
+	free_path_list(path_list);  /* Clean up path list */
 	return (NULL);
 }
 
