@@ -130,36 +130,38 @@ builtin.c  cmd.c  env.c  hsh  path.c  parser.c  README.md  shell.c  shell.h  sig
 
 ## Prototypes
 
-/* env.c - Environment variable functions */
-char *_getenv(const char *name);
-int find_env_index(const char *name);
-int _setenv(const char *name, const char *value, int overwrite);
-int _unsetenv(const char *name);
-void print_env(void);
+## Prototypes
 
-/* path.c - PATH handling functions */
-path_node_t *build_path_list(void);
-int print_path_list(const path_node_t *head);
-int print_path_directories(void);
-char *find_path_command(char *command);
-void free_path_list(path_node_t *head);
+### env.c - Environment variable functions
+- `char *_getenv(const char *name)` - Gets the value of an environment variable
+- `int find_env_index(const char *name)` - Finds the index of an environment variable
+- `int _setenv(const char *name, const char *value, int overwrite)` - Sets an environment variable
+- `int _unsetenv(const char *name)` - Unsets an environment variable
+- `void print_env(void)` - Prints all environment variables
 
-/* cmd.c - Command processing functions */
-ssize_t read_command(char **buffer, size_t *bufsize);
-int execute_command(char *command_path, char **args, char *prog_name, int cmd_count);
-int process_command(char *buffer, char *prog_name, int cmd_count);
-int command_error(char **args, char *prog_name, int cmd_count);
+### path.c - PATH handling functions
+- `path_node_t *build_path_list(void)` - Builds a linked list of PATH directories
+- `int print_path_list(const path_node_t *head)` - Prints the PATH linked list
+- `int print_path_directories(void)` - Prints all directories in PATH
+- `char *find_path_command(char *command)` - Finds a command in PATH
+- `void free_path_list(path_node_t *head)` - Frees the PATH linked list
 
-/* parser.c - String parsing functions */
-char **split_string(char *str);
-int _which(char *filename);
+### cmd.c - Command processing functions
+- `ssize_t read_command(char **buffer, size_t *bufsize)` - Reads a command from input
+- `int execute_command(char *command_path, char **args, char *prog_name, int cmd_count)` - Executes a command
+- `int process_command(char *buffer, char *prog_name, int cmd_count)` - Processes and executes a command
+- `int command_error(char **args, char *prog_name, int cmd_count)` - Handles command errors
 
-/* signal.c - Signal handling functions */
-void handle_sigint(int sig);
+### parser.c - String parsing functions
+- `char **split_string(char *str)` - Splits a string into tokens
+- `int _which(char *filename)` - Checks if a file exists in PATH
 
-/* builtin.c - Built-in command functions */
-int handle_builtin_env(char **args);
-int handle_builtin_pid(char **args);
+### signal.c - Signal handling functions
+- `void handle_sigint(int sig)` - Handles SIGINT signal (Ctrl+C)
+
+### builtin.c - Built-in command functions
+- `int handle_builtin_env(char **args)` - Handles the env built-in command
+- `int handle_builtin_pid(char **args)` - Handles the pid built-in command
 
 ## Flowchart
 
