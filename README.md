@@ -130,8 +130,6 @@ builtin.c  cmd.c  env.c  hsh  path.c  parser.c  README.md  shell.c  shell.h  sig
 
 ## Prototypes
 
-## Prototypes
-
 ### env.c - Environment variable functions
 - `char *_getenv(const char *name)` - Gets the value of an environment variable
 - `int find_env_index(const char *name)` - Finds the index of an environment variable
