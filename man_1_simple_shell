@@ -91,14 +91,9 @@ Dynamic memory allocation for PATH structures might fail with very long or compl
 The shell doesn't support environment variable substitutions (like $HOME or ${HOME}).
 .IP \[bu] 2
 Syntax errors in commands are not reported with detailed messages.
-.IP \[bu] 2
-The _setenv() function modifies the global environment variable without creating a copy for child processes.
-.IP \[bu] 2
-Command aliases and command history features are not supported.
-.IP \[bu] 2
-Complex commands with redirections or pipes (like 'ls > file.txt' or 'ls | grep a') are not supported.
-.IP \[bu] 2
-The pid built-in command is not standard and doesn't exist in most UNIX shells.
 
 .SH AUTHORS
-Lucas Boyadjian and Guillaume Font
+.IP \[bu] 2
+Lucas Boyadjian
+.IP \[bu] 2
+Guillaume Font

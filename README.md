@@ -206,10 +206,11 @@ $ valgrind --leak-check=full --show-leak-kinds=all ./hsh
 
 ## Known Bugs
 
-- The current implementation doesn't handle arguments for the `exit` built-in command
-- There are some unused functions in the code that are reserved for future enhancements
-- `print_env()` uses `printf()` instead of `write()`, which might cause buffering issues in certain situations
-- Memory leaks might occur if the shell is terminated abruptly without proper cleanup
+- Memory leaks might occur if the shell is terminated abruptly (e.g., via kill signal).
+- Dynamic allocation for PATH structures might fail with extremely long environment variables.
+- The `exit` built-in command does not process arguments (e.g., `exit 1` is treated as `exit 0`)
+- `print_env()` uses `printf()` instead of `write()`, which might can cause buffering issues.
+- Environment variable substitution (e.g., `$HOME`) is not implemented.
 
 ## Authors
 
