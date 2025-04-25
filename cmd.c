@@ -113,6 +113,8 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 	}
 	if (strcmp(args[0], "exit") == 0) /* Built-in: exit command */
 	{
+		fflush(stdout);
+		fflush(stderr);
 		for (i = 0; args[i]; i++)
 			free(args[i]);
 		free(args);
@@ -171,7 +173,7 @@ int command_error(char **args, char *prog_name, int cmd_count,
 	}
 	else
 	{
-		fprintf(stderr, "%s: %d: %s: command not found\n",
+		fprintf(stderr, "%s: %d: %s: not found\n",
 			 prog_name, cmd_count, args[0]); /* Command not found error */
 		code_return = (127); /* Standard error code for command not found */
 	}
