@@ -96,34 +96,34 @@ int execute_command(char *command_path, char **args,
 int process_command(char *buffer, char *prog_name, int cmd_count)
 {
 	char **args, *command_path;
-	char *endptr;
-	int error_code, i = 0, exit_code = 0;
+	int error_code, i = 0;
 	struct stat st;
 
 	if (buffer == NULL || strlen(buffer) == 0)  /* Handle empty input */
 		return (0);
+
 	args = split_string(buffer); /* Split input into arguments */
 	if (args == NULL) /* Memory allocation failed */
 		return (1);
+
 	if (args[0] == NULL) /* Empty arguments array (e.g., just spaces) */
 	{
 		free(args);
 		return (0);
 	}
-	if (strcmp(args[0], "exit") == 0)
+	if (strcmp(args[0], "exit") == 0) /* Built-in: exit command */
 	{
-		if (args[1] != NULL)
-			exit_code = (int)strtol(args[1], &endptr, 10);
-		if (*endptr != '\0' && *endptr != '\n')
-			exit_code = 0;
+		fflush(stdout);
+		fflush(stderr);
+		for (i = 0; args[i]; i++)
+			free(args[i]);
+		free(args);
+		return (-1);
 	}
-	for (i = 0; args[i]; i++)
-		free(args[i]);
-	free(args);
-	exit(exit_code);
 
 	if (strcmp(args[0], "env") == 0) /* Built-in: env command */
 		return (handle_builtin_env(args));
+
 	if (strcmp(args[0], "pid") == 0) /* Built-in: pid command (bonus) */
 		return (handle_builtin_pid(args));
 
