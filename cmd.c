@@ -91,7 +91,7 @@ int execute_command(char *command_path, char **args,
  * @prog_name: The name of the shell program
  * @cmd_count: The command count for error messages
  *
- * Return: 0 on success, -1 to exit, or 0 if the command is not found
+ * Return: 0 on success, -1 to exit, or error code if command fails
  */
 int process_command(char *buffer, char *prog_name, int cmd_count)
 {
@@ -111,14 +111,14 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 		free(args);
 		return (0);
 	}
+
 	if (strcmp(args[0], "exit") == 0) /* Built-in: exit command */
 	{
 		for (i = 0; args[i]; i++)
 			free(args[i]);
 		free(args);
-		return (-1);
+		_exit(0);
 	}
-
 	if (strcmp(args[0], "env") == 0) /* Built-in: env command */
 		return (handle_builtin_env(args));
 
@@ -132,7 +132,8 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 		error_code = command_error(args, prog_name, cmd_count, command_path);
 		return (error_code);
 	}
-	return (execute_command(command_path, args, prog_name, cmd_count));
+	return (execute_command(command_path, args, prog_name,
+		cmd_count));
 }
 
 /**
