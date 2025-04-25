@@ -10,21 +10,27 @@
 ssize_t read_command(char **buffer, size_t *bufsize)
 {
 	ssize_t characters;
+	/* Check if running in interactive mode */
+	int interactive = isatty(STDIN_FILENO);
 
-	if (isatty(STDIN_FILENO))
-		printf("($) ");
+	if (interactive)
+		printf("($) "); /* Only display prompt in interactive mode */
 
-	characters = getline(buffer, bufsize, stdin);
+	characters = getline(buffer, bufsize, stdin); /* Read user input */
 
-	if (characters == -1)
+	if (characters == -1) /* EOF (Ctrl+D) detected */
 	{
-		if (isatty(STDIN_FILENO))
+		if (interactive)
 			printf("\n");
 		return (-1);
 	}
 
 	if ((*buffer)[characters - 1] == '\n')
-		(*buffer)[characters - 1] = '\0';
+	{
+		if (interactive)
+			/* Remove newline only in interactive mode */
+			(*buffer)[characters - 1] = '\0';
+	}
 
 	return (characters);
 }
@@ -44,7 +50,7 @@ int execute_command(char *command_path, char **args,
 	pid_t child_pid;
 	int status, exit_status = 0, i;
 
-	child_pid = fork();
+	child_pid = fork(); /* Create a child process */
 	if (child_pid == -1)
 	{
 		perror("Error: fork failed");
@@ -54,7 +60,7 @@ int execute_command(char *command_path, char **args,
 		free(args);
 		return (1);
 	}
-	if (child_pid == 0)
+	if (child_pid == 0) /* Child process */
 	{
 		if (execve(command_path, args, environ) == -1)
 		{
@@ -64,12 +70,12 @@ int execute_command(char *command_path, char **args,
 			for (i = 0; args[i]; i++)
 				free(args[i]);
 			free(args);
-			exit(126);
+			exit(126); /* Permission denied exit code */
 		}
 	}
-	else
+	else /* Parent process */
 	{
-		wait(&status);
+		wait(&status);  /* Wait for child to finish */
 		if (WIFEXITED(status))
 			exit_status = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
@@ -96,19 +102,19 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 	char **args, *command_path;
 	int error_code, i = 0;
 
-	if (buffer == NULL || strlen(buffer) == 0)
+	if (buffer == NULL || strlen(buffer) == 0)  /* Handle empty input */
 		return (0);
 
-	args = split_string(buffer);
-	if (args == NULL)
+	args = split_string(buffer); /* Split input into arguments */
+	if (args == NULL) /* Memory allocation failed */
 		return (1);
 
-	if (args[0] == NULL)
+	if (args[0] == NULL) /* Empty arguments array (e.g., just spaces) */
 	{
 		free(args);
 		return (0);
 	}
-	if (strcmp(args[0], "exit") == 0)
+	if (strcmp(args[0], "exit") == 0) /* Built-in: exit command */
 	{
 		for (i = 0; args[i]; i++)
 			free(args[i]);
@@ -116,14 +122,14 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 		return (-1);
 	}
 
-	if (strcmp(args[0], "env") == 0)
+	if (strcmp(args[0], "env") == 0) /* Built-in: env command */
 		return (handle_builtin_env(args));
 
-	if (strcmp(args[0], "pid") == 0)
+	if (strcmp(args[0], "pid") == 0) /* Built-in: pid command (bonus) */
 		return (handle_builtin_pid(args));
 
-	command_path = find_path_command(args[0]);
-	if (command_path == NULL)
+	command_path = find_path_command(args[0]); /* Search PATH for command */
+	if (command_path == NULL) /* Command not found */
 	{
 		error_code = command_error(args, prog_name, cmd_count);
 		return (error_code);
@@ -148,17 +154,17 @@ int command_error(char **args, char *prog_name, int cmd_count)
 {
 	int i, code_return;
 
-	if (strchr(args[0], '/') != NULL)
+	if (strchr(args[0], '/') != NULL) /* Check if command includes path */
 	{
 		fprintf(stderr, "%s: %d: %s: No such file or directory\n",
-			prog_name, cmd_count, args[0]);
-		code_return = (2);
+			prog_name, cmd_count, args[0]); /* File not found error */
+		code_return = (2); /* Standard error code for file not found */
 	}
 	else
 	{
 		fprintf(stderr, "%s: %d: %s: not found\n",
-			 prog_name, cmd_count, args[0]);
-		code_return = (127);
+			 prog_name, cmd_count, args[0]); /* Command not found error */
+		code_return = (127); /* Standard error code for command not found */
 	}
 
 	for (i = 0; args[i]; i++)
