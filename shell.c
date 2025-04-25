@@ -17,6 +17,7 @@ int main(int argc, char **argv)
 	ssize_t characters;
 	char *prog_name, *buffer = NULL;
 	int exit_status, cmd_count = 1;
+	int last_cmd_status = 0;
 
 	(void)argc;
 	prog_name = argv[0];
@@ -38,8 +39,11 @@ int main(int argc, char **argv)
 
 		if (exit_status == -2)	/* Exit command was entered */
 		{
-			break;
+			free(buffer);
+			return (last_cmd_status);
 		}
+
+		last_cmd_status = exit_status;
 
 		cmd_count++;	/* Increment command counter */
 	}
