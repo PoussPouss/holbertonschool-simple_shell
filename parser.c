@@ -1,4 +1,34 @@
 #include "shell.h"
+/**
+ * remove_quotes - Removes surrounding quotes from a string if present
+ * @str: The string to process
+ *
+ * Return: A new string without the quotes, or NULL if memory allocation fails
+ * The caller is responsible for freeing the returned string
+ */
+char *remove_quotes(char *str)
+{
+	size_t len;
+	char *result;
+
+	if (str == NULL)
+		return (NULL);
+
+	len = strlen(str);
+
+	if (len >= 2 && ((str[0] == '"' && str[len - 1] == '"') ||
+		(str[0] == '\'' && str[len - 1] == '\'')))
+	{
+		result = malloc(len - 1);
+		if (result == NULL)
+			return (NULL);
+
+		strncpy(result, str + 1, len - 2);
+		result[len - 2] = '\0';
+		return (result);
+	}
+	return (strdup(str));
+}
 
 /**
  * split_string - Splits a string into an array of words.
@@ -9,11 +39,8 @@
  */
 char **split_string(char *str)
 {
-	char **array;
-	char *token;
-	int i = 0;
-	int words = 0;
-	char *tmp;
+	char **array, *token, *token_no_quotes, *tmp;
+	int words = 0, i = 0;
 
 	if (str == NULL)
 		return (NULL);
@@ -33,8 +60,8 @@ char **split_string(char *str)
 	token = strtok(str, " \t\n");
 	while (token != NULL)
 	{
-		array[i] = strdup(token);
-		if (array[i] == NULL)
+		token_no_quotes = remove_quotes(token);
+		if (token_no_quotes == NULL)
 		{
 			while (i > 0)
 			{
@@ -44,6 +71,7 @@ char **split_string(char *str)
 			free(array);
 			return (NULL);
 		}
+		array[i] = token_no_quotes;
 		i++;
 		token = strtok(NULL, " \t\n");
 	}

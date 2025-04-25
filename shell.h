@@ -48,6 +48,7 @@ int command_error(char **args, char *prog_name, int cmd_count);
 /* parser.c - String parsing functions */
 char **split_string(char *str);
 int _which(char *filename);
+char *remove_quotes(char *str);
 
 /* signal.c - Signal handling functions */
 void handle_sigint(int sig);
