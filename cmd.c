@@ -116,8 +116,9 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 		for (i = 0; args[i]; i++)
 			free(args[i]);
 		free(args);
-		_exit(0);
+		exit(0);
 	}
+
 	if (strcmp(args[0], "env") == 0) /* Built-in: env command */
 		return (handle_builtin_env(args));
 
