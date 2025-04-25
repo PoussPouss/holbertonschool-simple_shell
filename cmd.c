@@ -114,7 +114,6 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 	{
 		if (args[1] != NULL)
 			exit_code = (int)strtol(args[1], &endptr, 10);
-
 		if (*endptr != '\0' && *endptr != '\n')
 			exit_code = 0;
 	}
@@ -125,7 +124,6 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 
 	if (strcmp(args[0], "env") == 0) /* Built-in: env command */
 		return (handle_builtin_env(args));
-
 	if (strcmp(args[0], "pid") == 0) /* Built-in: pid command (bonus) */
 		return (handle_builtin_pid(args));
 
