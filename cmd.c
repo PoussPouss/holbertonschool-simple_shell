@@ -26,11 +26,7 @@ ssize_t read_command(char **buffer, size_t *bufsize)
 	}
 
 	if ((*buffer)[characters - 1] == '\n')
-	{
-		if (interactive)
-			/* Remove newline only in interactive mode */
-			(*buffer)[characters - 1] = '\0';
-	}
+		(*buffer)[characters - 1] = '\0';
 
 	return (characters);
 }
