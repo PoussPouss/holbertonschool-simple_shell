@@ -14,14 +14,14 @@ ssize_t read_command(char **buffer, size_t *bufsize)
 	int interactive = isatty(STDIN_FILENO);
 
 	if (interactive)
-		printf("($) "); /* Only display prompt in interactive mode */
+		printf("$ "); /* Only display prompt in interactive mode */
 
 	characters = getline(buffer, bufsize, stdin); /* Read user input */
 
 	if (characters == -1) /* EOF (Ctrl+D) detected */
 	{
 		if (interactive)
-			printf("\n");
+			write(STDOUT_FILENO, "\n", 1);
 		return (-1);
 	}
 
