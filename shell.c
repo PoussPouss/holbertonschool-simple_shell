@@ -36,9 +36,8 @@ int main(int argc, char **argv)
 		/* Process and execute the command */
 		exit_status = process_command(buffer, prog_name, cmd_count);
 
-		if (exit_status == -1)	/* Exit command was entered */
+		if (exit_status == -2)	/* Exit command was entered */
 		{
-			exit_status = 0;
 			break;
 		}
 
