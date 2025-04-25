@@ -10,39 +10,61 @@
 char **split_string(char *str)
 {
 	char **array;
-	char *token;
-	int i = 0;
-	int words = 0;
+	char *token, *src, *dst;
+	int i = 0, words = 0;
 	char *tmp;
 
 	if (str == NULL)
 		return (NULL);
-
-	tmp = strdup(str);
-	token = strtok(tmp, " \t\n");
+		tmp = strdup(str);
+	if (tmp == NULL)
+		return (NULL);
+		token = strtok(tmp, " \t\n");
 	while (token != NULL)
 	{
 		words++;
 		token = strtok(NULL, " \t\n");
 	}
 	free(tmp);
-	array = malloc(sizeof(char *) * (words + 1));
-
+		array = malloc(sizeof(char *) * (words + 1));
 	if (array == NULL)
 		return (NULL);
-	token = strtok(str, " \t\n");
+		token = strtok(str, " \t\n");
 	while (token != NULL)
 	{
-		array[i] = strdup(token);
-		if (array[i] == NULL)
+		if ((token[0] == '\'' && token[strlen(token) - 1] == '\'') ||
+			(token[0] == '"' && token[strlen(token) - 1] == '"'))
 		{
-			while (i > 0)
+			array[i] = malloc(strlen(token) - 1);
+			if (array[i] == NULL)
 			{
-				i--;
-				free(array[i]);
+				while (i > 0)
+				{
+					i--;
+					free(array[i]);
+				}
+				free(array);
+				return (NULL);
 			}
-			free(array);
-			return (NULL);
+			src = token + 1;
+			dst = array[i];
+			while (*src && *src != token[0])
+				*dst++ = *src++;
+			*dst = '\0';
+		}
+		else
+		{
+			array[i] = strdup(token);
+			if (array[i] == NULL)
+			{
+				while (i > 0)
+				{
+					i--;
+					free(array[i]);
+				}
+				free(array);
+				return (NULL);
+			}
 		}
 		i++;
 		token = strtok(NULL, " \t\n");

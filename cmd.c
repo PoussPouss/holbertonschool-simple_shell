@@ -102,7 +102,6 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 
 	if (buffer == NULL || strlen(buffer) == 0)
 		return (0);
-
 	args = split_string(buffer);
 	if (args == NULL)
 		return (1);
@@ -113,13 +112,18 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 		return (0);
 	}
 	if (strcmp(args[0], "exit") == 0)
-	{
-		for (i = 0; args[i]; i++)
-			free(args[i]);
-		free(args);
-		return (-1);
-	}
+{
+	int exit_code = 0;
 
+	if (args[1] != NULL)
+		exit_code = atoi(args[1]);
+
+	for (i = 0; args[i]; i++)
+		free(args[i]);
+	free(args);
+
+	exit(exit_code);
+}
 	if (strcmp(args[0], "env") == 0)
 		return (handle_builtin_env(args));
 
