@@ -86,54 +86,87 @@ int execute_command(char *command_path, char **args,
 }
 
 /**
+ * handle_exit - Handles the exit built-in command
+ * @args: Array of command arguments
+ * @prog_name: Name of the program for error messages
+ * @cmd_count: Command counter for error messages
+ *
+ * Return: 2 if invalid argument, otherwise doesn't return (calls exit)
+ */
+int handle_exit(char **args, char *prog_name, int cmd_count)
+{
+	 int i, exit_code = 0;
+	 char *endptr;
+
+	if (args[1] != NULL)
+	{
+
+		exit_code = (int)strtol(args[1], &endptr, 10);
+
+		if (*endptr != '\0')
+		{
+			fprintf(stderr, "%s: %d: exit: Illegal number: %s\n",
+					 prog_name, cmd_count, args[1]);
+
+			for (i = 0; args[i]; i++)
+				free(args[i]);
+			free(args);
+
+			return (2);
+		}
+	}
+
+	for (i = 0; args[i]; i++)
+		free(args[i]);
+	free(args);
+
+	exit(exit_code);
+}
+
+/**
  * process_command - Processes and executes a command from the user input
  * @buffer: The input command string
  * @prog_name: The name of the shell program
  * @cmd_count: The command count for error messages
  *
- * Return: 0 on success, -1 to exit, or 0 if the command is not found
+ * Return: 0 on success, exit code on error
  */
 int process_command(char *buffer, char *prog_name, int cmd_count)
 {
-	char **args, *command_path;
-	int error_code, i = 0;
-	struct stat st;
+	 char **args, *command_path;
+	 int error_code = 0;
+	 struct stat st;
 
-	if (buffer == NULL || strlen(buffer) == 0)  /* Handle empty input */
+	if (buffer == NULL || strlen(buffer) == 0)
 		return (0);
 
-	args = split_string(buffer); /* Split input into arguments */
-	if (args == NULL) /* Memory allocation failed */
+	args = split_string(buffer);
+	if (args == NULL)
 		return (1);
 
-	if (args[0] == NULL) /* Empty arguments array (e.g., just spaces) */
+	if (args[0] == NULL)
 	{
 		free(args);
 		return (0);
 	}
-	if (strcmp(args[0], "exit") == 0) /* Built-in: exit command */
-	{
-		fflush(stdout);
-		fflush(stderr);
-		for (i = 0; args[i]; i++)
-			free(args[i]);
-		free(args);
-		return (-1);
-	}
 
-	if (strcmp(args[0], "env") == 0) /* Built-in: env command */
+	if (strcmp(args[0], "exit") == 0)
+		return (handle_exit(args, prog_name, cmd_count));
+
+	if (strcmp(args[0], "env") == 0)
 		return (handle_builtin_env(args));
 
-	if (strcmp(args[0], "pid") == 0) /* Built-in: pid command (bonus) */
+	if (strcmp(args[0], "pid") == 0)
 		return (handle_builtin_pid(args));
 
-	command_path = find_path_command(args[0]); /* Search PATH for command */
-	if (command_path == NULL || (stat(command_path, &st) == 0 &&
-	S_ISDIR(st.st_mode)))
+	command_path = find_path_command(args[0]);
+	if (command_path == NULL || (stat(command_path, &st) == 0
+	 && S_ISDIR(st.st_mode)))
 	{
 		error_code = command_error(args, prog_name, cmd_count, command_path);
 		return (error_code);
 	}
+
 	return (execute_command(command_path, args, prog_name, cmd_count));
 }
 

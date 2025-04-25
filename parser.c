@@ -1,11 +1,11 @@
 #include "shell.h"
 /**
- * remove_quotes - Removes surrounding quotes from a string if present
- * @str: The string to process
- *
- * Return: A new string without the quotes, or NULL if memory allocation fails
- * The caller is responsible for freeing the returned string
- */
+* remove_quotes - Removes surrounding quotes from a string if present
+* @str: The string to process
+*
+* Return: A new string without the quotes, or NULL if memory allocation fails
+* The caller is responsible for freeing the returned string
+*/
 char *remove_quotes(char *str)
 {
 	size_t len;
@@ -31,68 +31,46 @@ char *remove_quotes(char *str)
 }
 
 /**
- * split_string - Splits a string into an array of words.
- * @str: The input string to be split.
- *
- * Return: A pointer to an array of strings (words),
- * or NULL if an error occurs.
- */
+* split_string - Splits a string into an array of words.
+* @str: The input string to be split.
+*
+* Return: A pointer to an array of strings (words),
+* or NULL if an error occurs.
+*/
 char **split_string(char *str)
 {
 	char **array, *token, *token_no_quotes, *tmp;
+
 	int words = 0, i = 0;
 
 	if (str == NULL)
 		return (NULL);
-		tmp = strdup(str);
-	if (tmp == NULL)
-		return (NULL);
-		token = strtok(tmp, " \t\n");
+
+	tmp = strdup(str);
+	token = strtok(tmp, " \t\n");
 	while (token != NULL)
 	{
 		words++;
 		token = strtok(NULL, " \t\n");
 	}
 	free(tmp);
-		array = malloc(sizeof(char *) * (words + 1));
+	array = malloc(sizeof(char *) * (words + 1));
+
 	if (array == NULL)
 		return (NULL);
-		token = strtok(str, " \t\n");
+	token = strtok(str, " \t\n");
 	while (token != NULL)
 	{
 		token_no_quotes = remove_quotes(token);
 		if (token_no_quotes == NULL)
 		{
-			array[i] = malloc(strlen(token) - 1);
-			if (array[i] == NULL)
+			while (i > 0)
 			{
-				while (i > 0)
-				{
-					i--;
-					free(array[i]);
-				}
-				free(array);
-				return (NULL);
+				i--;
+				free(array[i]);
 			}
-			src = token + 1;
-			dst = array[i];
-			while (*src && *src != token[0])
-				*dst++ = *src++;
-			*dst = '\0';
-		}
-		else
-		{
-			array[i] = strdup(token);
-			if (array[i] == NULL)
-			{
-				while (i > 0)
-				{
-					i--;
-					free(array[i]);
-				}
-				free(array);
-				return (NULL);
-			}
+			free(array);
+			return (NULL);
 		}
 		array[i] = token_no_quotes;
 		i++;
@@ -103,11 +81,11 @@ char **split_string(char *str)
 }
 
 /**
- * _which - Checks if a command exists in the PATH
- * @filename: The command to check
- *
- * Return: 0 if found, -1 otherwise
- */
+* _which - Checks if a command exists in the PATH
+* @filename: The command to check
+*
+* Return: 0 if found, -1 otherwise
+*/
 int _which(char *filename)
 {
 	char *path = find_path_command(filename);

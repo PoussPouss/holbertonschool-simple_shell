@@ -1,14 +1,15 @@
 #include "shell.h"
 
 /**
- * _getenv - Gets the value of an environment variable
- * @name: Name of the environment variable to search for
- *
- * Return: Pointer to the value of the variable, or NULL if not found
- */
+* _getenv - Gets the value of an environment variable
+* @name: Name of the environment variable to search for
+*
+* Return: Pointer to the value of the variable, or NULL if not found
+*/
 char *_getenv(const char *name)
 {
 	int i;
+
 	size_t name_len;
 
 	if (name == NULL || *name == '\0')
@@ -25,14 +26,15 @@ char *_getenv(const char *name)
 }
 
 /**
- * find_env_index - Finds the index of an environment variable
- * @name: Name of the variable to find
- *
- * Return: Index of the variable or -1 if not found
- */
+* find_env_index - Finds the index of an environment variable
+* @name: Name of the variable to find
+*
+* Return: Index of the variable or -1 if not found
+*/
 int find_env_index(const char *name)
 {
 	int i;
+
 	size_t name_len;
 
 	if (name == NULL || *name == '\0')
@@ -47,17 +49,19 @@ int find_env_index(const char *name)
 }
 
 /**
- * _setenv - Modifies or adds an environment variable
- * @name: Name of the variable
- * @value: Value to assign
- * @overwrite: Flag indicating whether to overwrite an existing variable
- *
- * Return: 0 on success, -1 on error
- */
+* _setenv - Modifies or adds an environment variable
+* @name: Name of the variable
+* @value: Value to assign
+* @overwrite: Flag indicating whether to overwrite an existing variable
+*
+* Return: 0 on success, -1 on error
+*/
 int _setenv(const char *name, const char *value, int overwrite)
 {
 	 int index, env_count, i;
+
 	 char *new_entry, **new_environ;
+
 	 size_t entry_len;
 
 	if (name == NULL || *name == '\0' || strchr(name, '=') != NULL)
@@ -82,8 +86,7 @@ int _setenv(const char *name, const char *value, int overwrite)
 	env_count = 0;
 	while (environ[env_count] != NULL) /* Count existing environment variables */
 		env_count++;
-
-	 new_environ = malloc((env_count + 2) * sizeof(char *));
+	new_environ = malloc((env_count + 2) * sizeof(char *));
 	if (new_environ == NULL)
 	{
 		free(new_entry);
@@ -91,19 +94,18 @@ int _setenv(const char *name, const char *value, int overwrite)
 	}
 	for (i = 0; i < env_count; i++) /* Copy existing environment pointers */
 		new_environ[i] = environ[i];
-
-	new_environ[env_count] = new_entry; /* Add new entry */
-	new_environ[env_count + 1] = NULL; /* Terminate array with NULL */
-	environ = new_environ; /* Replace environment pointer */
+	new_environ[env_count] = new_entry;
+	new_environ[env_count + 1] = NULL;
+	environ = new_environ;
 	return (0);
 }
 
 /**
- * _unsetenv - Removes an environment variable
- * @name: Name of the variable to remove
- *
- * Return: 0 on success, -1 on error
- */
+* _unsetenv - Removes an environment variable
+* @name: Name of the variable to remove
+*
+* Return: 0 on success, -1 on error
+*/
 int _unsetenv(const char *name)
 {
 	int index, i;
@@ -126,8 +128,8 @@ int _unsetenv(const char *name)
 }
 
 /**
- * print_env - Displays all environment variables
- */
+* print_env - Displays all environment variables
+*/
 void print_env(void)
 {
 	int i = 0;
