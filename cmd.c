@@ -157,23 +157,32 @@ int command_error(char **args, char *prog_name, int cmd_count,
 
 	if (command_path && stat(command_path, &st) == 0 && S_ISDIR(st.st_mode))
 	{
-		fprintf(stderr, "%s: %d: %s: Is a directory\n",
+		fprintf(stderr, "%s: %d: %s: Permission denied\n",
 				prog_name, cmd_count, args[0]);
 		free(command_path);
-		code_return = 126;  /* Same error code as permission denied */
+		code_return = 126;
 	}
-
 	else if (strchr(args[0], '/') != NULL) /* Check if command includes path */
 	{
-		fprintf(stderr, "%s: %d: %s: not found\n",
-			prog_name, cmd_count, args[0]); /* File not found error */
-		code_return = (127); /* Standard error code for file not found */
+		/* Vérifier si le fichier existe mais n'est pas exécutable */
+		if (access(args[0], F_OK) == 0 && access(args[0], X_OK) != 0)
+		{
+			fprintf(stderr, "%s: %d: %s: Permission denied\n",
+				prog_name, cmd_count, args[0]);
+			code_return = 126; /* Code d'erreur pour permission denied */
+		}
+		else
+		{
+			fprintf(stderr, "%s: %d: %s: not found\n",
+				prog_name, cmd_count, args[0]);
+			code_return = 127; /* Code d'erreur pour fichier non trouvé */
+		}
 	}
 	else
 	{
 		fprintf(stderr, "%s: %d: %s: not found\n",
-			 prog_name, cmd_count, args[0]); /* Command not found error */
-		code_return = (127); /* Standard error code for command not found */
+			 prog_name, cmd_count, args[0]);
+		code_return = 127; /* Code d'erreur pour commande non trouvée */
 	}
 
 	for (i = 0; args[i]; i++)
@@ -182,3 +191,4 @@ int command_error(char **args, char *prog_name, int cmd_count,
 
 	return (code_return);
 }
+
