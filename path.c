@@ -111,21 +111,26 @@ char *find_path_command(char *command)
 {
 	path_node_t *path_list, *current;
 	char *full_path;
-	struct stat st;
 
-	if (strchr(command, '/') != NULL)  /* Command contains path separator */
+	/* Check if command contains a path separator '/' */
+	if (strchr(command, '/') != NULL)
 	{
-		if (stat(command, &st) == 0 && (st.st_mode & S_IXUSR))
-			return (strdup(command));  /* Return copy of command as-is */
+		/* Check directly if the file exists and is executable */
+		if (access(command, X_OK) == 0)
+			return (strdup(command));  /* Return a copy of the command as-is */
 		return (NULL);  /* Not found or not executable */
 	}
-	path_list = build_path_list();  /* Build path list */
-	if (!path_list)
-		return (NULL);  /* Failed to build path list */
 
-	current = path_list;  /* Start at first node */
-	while (current)  /* Try each directory */
+	/* Build the list of directories from PATH */
+	path_list = build_path_list();
+	if (!path_list)
+		return (NULL);  /* Failed to build the list */
+
+	/* Try each directory in the PATH list */
+	current = path_list;
+	while (current)
 	{
+		/* Construct the full path */
 		full_path = malloc(strlen(current->directory) + strlen(command) + 2);
 		if (!full_path)
 		{
@@ -133,17 +138,16 @@ char *find_path_command(char *command)
 			return (NULL);
 		}
 		sprintf(full_path, "%s/%s", current->directory, command);
-
-		if (stat(full_path, &st) == 0 && (st.st_mode & S_IXUSR))
+		/* Check if the file exists and is executable */
+		if (access(full_path, X_OK) == 0)
 		{
 			free_path_list(path_list);  /* Free the path list */
-			return (full_path);
+			return (full_path);  /* Return the full path */
 		}
-
 		free(full_path);
-		current = current->next;  /* Move to next directory */
+		current = current->next;
 	}
-	free_path_list(path_list);  /* Clean up path list */
+	free_path_list(path_list);
 	return (NULL);
 }
 
