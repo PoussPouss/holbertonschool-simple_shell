@@ -101,6 +101,7 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 {
 	char **args, *command_path;
 	int error_code, i = 0;
+	struct stat st;
 
 	if (buffer == NULL || strlen(buffer) == 0)  /* Handle empty input */
 		return (0);
@@ -129,9 +130,10 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 		return (handle_builtin_pid(args));
 
 	command_path = find_path_command(args[0]); /* Search PATH for command */
-	if (command_path == NULL) /* Command not found */
+	if (command_path == NULL || (stat(command_path, &st) == 0 &&
+	S_ISDIR(st.st_mode)))
 	{
-		error_code = command_error(args, prog_name, cmd_count);
+		error_code = command_error(args, prog_name, cmd_count, command_path);
 		return (error_code);
 	}
 	return (execute_command(command_path, args, prog_name, cmd_count));
@@ -142,6 +144,7 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
  * @args: Array of command arguments
  * @prog_name: Name of the program for error messages
  * @cmd_count: Command counter for error messages
+ * @command_path: Full path of the command to check for errors
  *
  * Description: This function displays an appropriate error message
  * depending on whether the command contains a path or not.
@@ -150,11 +153,21 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
  * Return: Returns 2 for "No such file or directory"
  * or 127 for "not found" errors
  */
-int command_error(char **args, char *prog_name, int cmd_count)
+int command_error(char **args, char *prog_name, int cmd_count,
+	char *command_path)
 {
 	int i, code_return;
+	struct stat st;
 
-	if (strchr(args[0], '/') != NULL) /* Check if command includes path */
+	if (command_path && stat(command_path, &st) == 0 && S_ISDIR(st.st_mode))
+	{
+		fprintf(stderr, "%s: %d: %s: Is a directory\n",
+				prog_name, cmd_count, args[0]);
+		free(command_path);
+		code_return = 126;  /* Same error code as permission denied */
+	}
+
+	else if (strchr(args[0], '/') != NULL) /* Check if command includes path */
 	{
 		fprintf(stderr, "%s: %d: %s: No such file or directory\n",
 			prog_name, cmd_count, args[0]); /* File not found error */
@@ -162,7 +175,7 @@ int command_error(char **args, char *prog_name, int cmd_count)
 	}
 	else
 	{
-		fprintf(stderr, "%s: %d: %s: not found\n",
+		fprintf(stderr, "%s: %d: %s: command not found\n",
 			 prog_name, cmd_count, args[0]); /* Command not found error */
 		code_return = (127); /* Standard error code for command not found */
 	}

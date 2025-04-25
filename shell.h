@@ -43,7 +43,8 @@ ssize_t read_command(char **buffer, size_t *bufsize);
 int execute_command(char *command_path, char **args, char *prog_name,
 	int cmd_count);
 int process_command(char *buffer, char *prog_name, int cmd_count);
-int command_error(char **args, char *prog_name, int cmd_count);
+int command_error(char **args, char *prog_name, int cmd_count,
+	char *command_path);
 
 /* parser.c - String parsing functions */
 char **split_string(char *str);
