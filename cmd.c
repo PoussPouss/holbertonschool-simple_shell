@@ -165,9 +165,9 @@ int command_error(char **args, char *prog_name, int cmd_count,
 
 	else if (strchr(args[0], '/') != NULL) /* Check if command includes path */
 	{
-		fprintf(stderr, "%s: %d: %s: No such file or directory\n",
+		fprintf(stderr, "%s: %d: %s: not found\n",
 			prog_name, cmd_count, args[0]); /* File not found error */
-		code_return = (2); /* Standard error code for file not found */
+		code_return = (127); /* Standard error code for file not found */
 	}
 	else
 	{
