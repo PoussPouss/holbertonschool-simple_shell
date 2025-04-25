@@ -38,8 +38,8 @@ int main(int argc, char **argv)
 
 		if (exit_status == -1)	/* Exit command was entered */
 		{
-			free(buffer);
-			_exit(0);
+			exit_status = 0;
+			break;
 		}
 
 		cmd_count++;	/* Increment command counter */
