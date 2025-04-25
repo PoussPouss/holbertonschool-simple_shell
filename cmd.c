@@ -91,7 +91,7 @@ int execute_command(char *command_path, char **args,
  * @prog_name: The name of the shell program
  * @cmd_count: The command count for error messages
  *
- * Return: 0 on success, -1 to exit, or error code if command fails
+ * Return: 0 on success, -1 to exit, or 0 if the command is not found
  */
 int process_command(char *buffer, char *prog_name, int cmd_count)
 {
@@ -111,14 +111,14 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 		free(args);
 		return (0);
 	}
-
 	if (strcmp(args[0], "exit") == 0) /* Built-in: exit command */
 	{
 		for (i = 0; args[i]; i++)
 			free(args[i]);
 		free(args);
-		_exit(0);
+		return (-1);
 	}
+
 	if (strcmp(args[0], "env") == 0) /* Built-in: env command */
 		return (handle_builtin_env(args));
 
@@ -132,8 +132,7 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 		error_code = command_error(args, prog_name, cmd_count, command_path);
 		return (error_code);
 	}
-	return (execute_command(command_path, args, prog_name,
-		cmd_count));
+	return (execute_command(command_path, args, prog_name, cmd_count));
 }
 
 /**
@@ -153,43 +152,43 @@ int process_command(char *buffer, char *prog_name, int cmd_count)
 int command_error(char **args, char *prog_name, int cmd_count,
 	char *command_path)
 {
-	int i, code_return;
+	int i, code_return, len;
 	struct stat st;
+	char error_msg[256];
 
 	if (command_path && stat(command_path, &st) == 0 && S_ISDIR(st.st_mode))
 	{
-		fprintf(stderr, "%s: %d: %s: Permission denied\n",
-				prog_name, cmd_count, args[0]);
+		len = snprintf(error_msg, sizeof(error_msg),
+		"%s: %d: %s: Permission denied\n", prog_name, cmd_count, args[0]);
+		write(STDERR_FILENO, error_msg, len);
 		free(command_path);
 		code_return = 126;
 	}
 	else if (strchr(args[0], '/') != NULL) /* Check if command includes path */
 	{
-		/* Vérifier si le fichier existe mais n'est pas exécutable */
 		if (access(args[0], F_OK) == 0 && access(args[0], X_OK) != 0)
-		{
-			fprintf(stderr, "%s: %d: %s: Permission denied\n",
-				prog_name, cmd_count, args[0]);
+		{	len = snprintf(error_msg, sizeof(error_msg),
+			"%s: %d: %s: Permission denied\n", prog_name, cmd_count, args[0]);
+			write(STDERR_FILENO, error_msg, len);
 			code_return = 126; /* Code d'erreur pour permission denied */
 		}
 		else
 		{
-			fprintf(stderr, "%s: %d: %s: not found\n",
+			len = snprintf(error_msg, sizeof(error_msg), "%s: %d: %s: not found\n",
 				prog_name, cmd_count, args[0]);
+			write(STDERR_FILENO, error_msg, len);
 			code_return = 127; /* Code d'erreur pour fichier non trouvé */
 		}
 	}
 	else
 	{
-		fprintf(stderr, "%s: %d: %s: not found\n",
-			 prog_name, cmd_count, args[0]);
+		len = snprintf(error_msg, sizeof(error_msg), "%s: %d: %s: not found\n",
+			prog_name, cmd_count, args[0]);
+		write(STDERR_FILENO, error_msg, len);
 		code_return = 127; /* Code d'erreur pour commande non trouvée */
 	}
-
 	for (i = 0; args[i]; i++)
 		free(args[i]);
 	free(args);
-
 	return (code_return);
 }
-
